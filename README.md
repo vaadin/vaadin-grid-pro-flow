@@ -28,7 +28,7 @@ Add ProGrid to your project
 
 #### Basic use
 ```java
-Component component = new Component();
+ProGrid progrid = new ProGrid();
 ```
 
 ## Setting up for development

@@ -17,20 +17,23 @@ package com.vaadin.flow.component.progrid;
  * #L%
  */
 
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.HtmlImport;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.grid.Grid;
 
-@Tag("div")
-//@Tag("vaadin-pro-grid")
-//@HtmlImport("frontend://bower_components/vaadin-pro-grid/src/vaadin-pro-grid.html")
-public class ProGrid extends Component {
+/**
+ *
+ * @param <E> the bean type
+ */
+@Tag("vaadin-pro-grid")
+@HtmlImport("frontend://bower_components/vaadin-grid/src/vaadin-grid.html")
+public class ProGrid<E> extends Grid<E> {
 
     /**
-     * Initializes a new ProGrid.
+     * Instantiates a new CrudGrid for the supplied bean type.
      */
     public ProGrid() {
-        getElement().appendChild(new H1("Hello World!").getElement());
+        super();
     }
+
 }

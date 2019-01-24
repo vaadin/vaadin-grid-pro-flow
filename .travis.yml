@@ -15,4 +15,4 @@ cache:
 
 before_cache:
   # remove all build artifacts
-  - rm -rf $HOME/.m2/repository/com/vaadin/vaadin-pro-grid-flow
+  - rm -rf $HOME/.m2/repository/com/vaadin/vaadin-grid-pro-flow

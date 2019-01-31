@@ -26,14 +26,14 @@ public class MainView extends VerticalLayout {
         GridPro<Person> grid = new GridPro<>();
         grid.setItems(createItems());
 
-        grid.addColumn(Person::getAge).setHeader("NAME");
+        grid.addColumn(Person::getAge).setHeader("Age");
 
-        grid.addEditColumn(Person::getName, EditColumnConfigurator.text((Person item, String newValue) -> {
+        grid.addEditColumn(Person::getName, EditColumnConfigurator.text((item, newValue) -> {
             itemDisplayPanel.setText(item.toString());
             subPropertyDisplayPanel.setText(newValue);
         })).setHeader("Name").setWidth("300px");
 
-        grid.addEditColumn(Person::isSubscriber, EditColumnConfigurator.checkbox((Person item, Boolean newValue) -> {
+        grid.addEditColumn(Person::isSubscriber, EditColumnConfigurator.checkbox((item, newValue) -> {
             itemDisplayPanel.setText(item.toString());
             subPropertyDisplayPanel.setText(newValue.toString());
         })).setHeader("Subscriber").setWidth("300px");

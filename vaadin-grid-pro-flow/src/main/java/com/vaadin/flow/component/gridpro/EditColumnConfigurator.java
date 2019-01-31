@@ -19,7 +19,14 @@ package com.vaadin.flow.component.gridpro;
 
 import com.vaadin.flow.function.SerializableFunction;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+
 
 /**
  * Configuration class with common available properties for different types of edit columns used
@@ -52,14 +59,13 @@ public class EditColumnConfigurator<T> {
     }
 
     /**
-     * Constructs a new Column Configurator with text editor preset for column creation.
+     * Constructs a new column configurator with text editor preset for column creation.
      *
      * @param <T>
      *            the grid bean type
      * @param itemUpdater
      *            the callback function that is called when item is changed.
-     *            It receives two arguments: item, newValue
-     *            Can be provided as lambda
+     *            It receives two arguments: item, newValue.
      * @return the instance of EditColumnConfigurator
      *
      */
@@ -68,7 +74,7 @@ public class EditColumnConfigurator<T> {
     }
 
     /**
-     * Constructs a new Column Configurator with checkbox editor preset for column creation.
+     * Constructs a new column configurator with checkbox editor preset for column creation.
      *
      * @param <T>
      *            the grid bean type
@@ -78,13 +84,13 @@ public class EditColumnConfigurator<T> {
      * @return the instance of EditColumnConfigurator
      */
     public static <T> EditColumnConfigurator<T> checkbox(ItemUpdater<T, Boolean> itemUpdater) {
-        ItemUpdater<T, String> wrapper = (T t, String s) -> itemUpdater.accept(t, Boolean.valueOf(s));
+        ItemUpdater<T, String> wrapper = (item, value) -> itemUpdater.accept(item, Boolean.valueOf(value));
 
         return new EditColumnConfigurator<>(wrapper, EditorType.CHECKBOX, Collections.emptyList());
     }
 
     /**
-     * Constructs a new Column Configurator with select editor preset for column creation.
+     * Constructs a new column configurator with select editor preset for column creation.
      *
      * @param <T>
      *            the grid bean type
@@ -92,7 +98,7 @@ public class EditColumnConfigurator<T> {
      *            the callback function that is called when item is changed.
      *            It receives two arguments: item and newValue.
      * @param options
-     *            the list of options provided for the select editor type
+     *            options provided for the select editor type
      * @return the instance of EditColumnConfigurator
      */
     public static <T> EditColumnConfigurator<T> select(ItemUpdater<T, String> itemUpdater, List<String> options) {
@@ -102,7 +108,7 @@ public class EditColumnConfigurator<T> {
     }
 
     /**
-     * Constructs a new Column Configurator with select editor preset for column creation.
+     * Constructs a new column configurator with select editor preset for column creation.
      *
      * @param <T>
      *            the grid bean type
@@ -110,7 +116,7 @@ public class EditColumnConfigurator<T> {
      *            the callback function that is called when item is changed.
      *            It receives two arguments: item and newValue.
      * @param options
-     *            the list of options provided for the select editor type
+     *            options provided for the select editor type
      * @return the instance of EditColumnConfigurator
      */
     public static <T> EditColumnConfigurator<T> select(ItemUpdater<T, String> itemUpdater, String ...options) {
@@ -118,7 +124,7 @@ public class EditColumnConfigurator<T> {
     }
 
     /**
-     * Constructs a new Column Configurator with select editor preset for column creation.
+     * Constructs a new column configurator with select editor preset for column creation based on an enum.
      *
      * @param <T>
      *            the grid bean type
@@ -127,7 +133,7 @@ public class EditColumnConfigurator<T> {
      * @param enumType
      *            the enum class
      * @param getStringRepresentation
-     *            the toString method for the class
+     *            callback used to get the string representation for each enum constant.
      * @param itemUpdater
      *            the callback function that is called when item is changed.
      *            It receives two arguments: item and newValue.
@@ -141,19 +147,21 @@ public class EditColumnConfigurator<T> {
         for(E item: items) {
             String stringRepresentation = getStringRepresentation.apply(item);
             if (map.containsKey(stringRepresentation)) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Enum constants " +
+                        map.get(stringRepresentation) + " and " +
+                        item + " both have the same string representation: " + stringRepresentation);
             }
             map.put(stringRepresentation, item);
             itemsList.add(stringRepresentation);
         }
 
-        ItemUpdater<T, String> wrapper = (ItemUpdater<T, String>) (t, s) -> itemUpdater.accept(t, map.get(s));
+        ItemUpdater<T, String> wrapper = (item, value) -> itemUpdater.accept(item, map.get(value));
 
         return select(wrapper, itemsList);
     }
 
     /**
-     * Constructs a new Column Configurator with select editor preset for column creation.
+     * Constructs a new column configurator with select editor preset for column creation based the toString() values of an enum.
      *
      * @param <T>
      *            the grid bean type

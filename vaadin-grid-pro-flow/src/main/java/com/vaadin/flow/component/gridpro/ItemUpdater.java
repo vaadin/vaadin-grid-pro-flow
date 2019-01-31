@@ -20,17 +20,19 @@ package com.vaadin.flow.component.gridpro;
 import com.vaadin.flow.function.SerializableBiConsumer;
 
 /**
- * {@link ItemUpdater} is used to modify the instance of the item.
+ * {@link ItemUpdater} is used to modify the instance of the item of {@link GridPro}.
  *
  * @param <T>
  *            the item type
+ * @param <V>
+ *            the value type
  * @author Vaadin Ltd
  * @since 1.0
  */
 public interface ItemUpdater<T, V> extends SerializableBiConsumer<T, V> {
 
     /**
-     * Gets a caption for the {@code item}.
+     * Updates {@link GridPro} item's subproperty with newValue
      *
      * @param item
      *            the instance of the item

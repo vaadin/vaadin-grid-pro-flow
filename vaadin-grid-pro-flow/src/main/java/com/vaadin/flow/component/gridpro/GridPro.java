@@ -2,9 +2,9 @@ package com.vaadin.flow.component.gridpro;
 
 /*
  * #%L
- * Vaadin GridPro for Vaadin 10
+ * Vaadin GridPro
  * %%
- * Copyright (C) 2017 - 2018 Vaadin Ltd
+ * Copyright (C) 2018 - 2019 Vaadin Ltd
  * %%
  * This program is available under Commercial Vaadin Add-On License 3.0
  * (CVALv3).
@@ -30,7 +30,10 @@ import com.vaadin.flow.data.provider.Query;
 import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Objects;
 
 
 @Tag("vaadin-grid-pro")
@@ -100,7 +103,6 @@ public class GridPro<E> extends Grid<E> {
      * Every added column sends data to the client side regardless of its
      * visibility state. Don't add a new column at all or use
      * {@link GridPro#removeColumn(Column)} to avoid sending extra data.
-     * </p>
      *
      * @param <T>
      *            type of the underlying grid this column is compatible with
@@ -197,16 +199,12 @@ public class GridPro<E> extends Grid<E> {
     /**
      * Adds a new edit column to this {@link GridPro} with a value provider.
      * <p>
-     * This method is based on {@link Grid#addColumn(ValueProvider)}.
-     * </p>
-     * <p>
      * The instance of {@link EditColumnConfigurator} should be provided as
      * second parameter in order to configure the needed type of the editor for the
      * column. Available static methods to configure the needed editor type are:
      * {@link EditColumnConfigurator#text(ItemUpdater)}
      * {@link EditColumnConfigurator#checkbox(ItemUpdater)}
      * {@link EditColumnConfigurator#select(ItemUpdater, List)}
-     * </p>
      *
      * @param valueProvider
      *            the value provider
@@ -231,16 +229,12 @@ public class GridPro<E> extends Grid<E> {
     /**
      * Adds a new edit column to this {@link GridPro} with a renderer.
      * <p>
-     * This method is based on {@link Grid#addColumn(Renderer)}.
-     * </p>
-     * <p>
      * The instance of {@link EditColumnConfigurator} should be provided as
      * second parameter in order to configure the needed type of the editor for the
      * column. Available static methods to configure the needed editor type are:
      * {@link EditColumnConfigurator#text(ItemUpdater)}
      * {@link EditColumnConfigurator#checkbox(ItemUpdater)}
      * {@link EditColumnConfigurator#select(ItemUpdater, List)}
-     * </p>
      *
      * @param renderer
      *            the renderer used to create the grid cell structure
@@ -265,12 +259,8 @@ public class GridPro<E> extends Grid<E> {
     /**
      * Adds a new edit column for the given property name.
      * <p>
-     * This method is based on {@link Grid#addColumn(String)}.
-     * </p>
-     * <p>
      * <strong>Note:</strong> This method can only be used for a Grid created
      * from a bean type with {@link #GridPro(Class)}.
-     * </p>
      * <p>
      * The instance of {@link EditColumnConfigurator} should be provided as
      * second parameter in order to configure the needed type of the editor for the
@@ -278,7 +268,6 @@ public class GridPro<E> extends Grid<E> {
      * {@link EditColumnConfigurator#text(ItemUpdater)}
      * {@link EditColumnConfigurator#checkbox(ItemUpdater)}
      * {@link EditColumnConfigurator#select(ItemUpdater, List)}
-     * </p>
      *
      * @see #removeColumn(Column)
      *
@@ -303,18 +292,20 @@ public class GridPro<E> extends Grid<E> {
     }
 
     /**
-     * Sets enterNextRow value for this grid.
+     * Sets the value of the webcomponent's property enterNextRow. Default values is false.
      *
      * @param enterNextRow
-     *            when <code>true</code>, after moving to next editable cell using
-     *            Tab / Enter, it will be focused in edit mode
+     *            when <code>true</code>, pressing Enter while in cell edit mode will move focus
+     *            to the editable cell in the next row (Shift + Enter - same, but for previous row)
      */
     public void setEnterNextRow(boolean enterNextRow) {
         getElement().setProperty("enterNextRow", enterNextRow);
     }
 
     /**
-     * Gets the enterNextRow value for this grid.
+     * Gets the value of the webcomponent's property enterNextRow. Default values is false.
+     * When true, pressing Enter while in cell edit mode will move focus to the editable cell
+     * in the next row (Shift + Enter - same, but for previous row).
      *
      * @return enterNextRow value
      */
@@ -324,18 +315,20 @@ public class GridPro<E> extends Grid<E> {
     }
 
     /**
-     * Sets keepEditorOpen value for this grid.
+     * Sets the value of the webcomponent's property keepEditorOpen. Default values is false.
      *
      * @param keepEditorOpen
-     *            when <code>true</code>, pressing Enter while in cell edit mode
-     *            will move focus to the editable cell in the next row
+     *            when <code>true</code>, after moving to next or previous editable cell
+     *            using Tab / Shift+Tab, it will be focused in edit mode
      */
     public void setKeepEditorOpen(boolean keepEditorOpen) {
         getElement().setProperty("keepEditorOpen", keepEditorOpen);
     }
 
     /**
-     * Gets the keepEditorOpen value for this grid.
+     * Gets the value of the webcomponent's property keepEditorOpen. Default values is false.
+     * When true, after moving to next or previous editable cell using Tab / Shift+Tab,
+     * it will be focused in edit mode.
      *
      * @return keepEditorOpen value
      */

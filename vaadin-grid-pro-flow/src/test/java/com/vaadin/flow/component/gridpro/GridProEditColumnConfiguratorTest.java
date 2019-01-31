@@ -26,7 +26,7 @@ public class GridProEditColumnConfiguratorTest {
         listOptions.add("bar");
         listOptions.add("baz");
     }
-    
+
     @Test
     public void shouldConfigureTextEditColumnPreset() {
         configurator = EditColumnConfigurator.text(testItemUpdater);

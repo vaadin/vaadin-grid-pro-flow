@@ -22,11 +22,9 @@ import com.vaadin.flow.component.grid.*;
 import com.vaadin.flow.component.Synchronize;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.data.renderer.Renderer;
-import com.vaadin.flow.function.SerializableBiConsumer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.internal.JsonSerializer;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.data.provider.Query;
 
 import elemental.json.JsonArray;
@@ -53,6 +51,10 @@ public class GridPro<E> extends Grid<E> {
 
     /**
      * Instantiates a new CrudGrid for the supplied bean type.
+     *
+     * @param beanType
+     *            the beanType for the item
+     *
      */
     public GridPro(Class<E> beanType) {
         super(beanType);
@@ -86,7 +88,8 @@ public class GridPro<E> extends Grid<E> {
     private void setup() {
         addItemPropertyChangedListener(e -> {
             EditColumn<E> column = (EditColumn<E>) this.idToColumnMap.get(e.getPath());
-            column.getCallback().accept(e.getItem(), e.getSourceItem().get(e.getPath()).asString());
+
+            column.getItemUpdater().accept(e.getItem(), e.getSourceItem().get(e.getPath()).asString());
         });
     }
 
@@ -105,7 +108,7 @@ public class GridPro<E> extends Grid<E> {
     @Tag("vaadin-grid-pro-edit-column")
     public static class EditColumn<T> extends Column<T> {
 
-        private SerializableBiConsumer<Object, String> callback;
+        private ItemUpdater<T, String> itemUpdater;
 
         /**
          * Constructs a new Column for use inside a Grid.
@@ -123,23 +126,25 @@ public class GridPro<E> extends Grid<E> {
         }
 
         /**
-         * Sets the callback function that will be called on item changed.
+         * Sets the itemUpdater function that will be called on item changed.
          *
-         * @param callback
+         * @param itemUpdater
          *            the callback function that is called when item is changed.
-         *            It receives two arguments: item and newValue
-         *            Can be provided as lambda
+         *            It receives two arguments: item and newValue.
+         * @return this column instance
          */
-        protected <C extends Column<T>> C setCallback(SerializableBiConsumer<Object, String> callback) {
-            this.callback = callback;
-            return (C) this;
+        protected EditColumn<T> setItemUpdater(ItemUpdater<T, String> itemUpdater) {
+            this.itemUpdater = itemUpdater;
+            return this;
         }
 
         /**
-         * Gets the callback function that will be called on item changed.
+         * Gets the itemUpdater function that will be called on item changed.
+         *
+         * @return the instance of itemUpdater for this column
          */
-        protected SerializableBiConsumer<Object, String> getCallback() {
-            return callback;
+        protected ItemUpdater<T, String> getItemUpdater() {
+            return itemUpdater;
         }
 
         /**
@@ -147,6 +152,8 @@ public class GridPro<E> extends Grid<E> {
          *
          * @param type
          *            the type of the editor
+         * @return this column instance
+         *
          * @see EditorType
          */
         protected EditColumn<T> setEditorType(EditorType type) {
@@ -156,6 +163,8 @@ public class GridPro<E> extends Grid<E> {
 
         /**
          * Gets the type of the editor that is used for modifying cell value.
+         *
+         * @return the editor type
          */
         @Synchronize("editor-type-changed")
         protected String getEditorType() {
@@ -167,6 +176,7 @@ public class GridPro<E> extends Grid<E> {
          *
          * @param options
          *            the list of options
+         * @return this column instance
          */
         protected EditColumn<T> setOptions(List<String> options) {
             getElement().setPropertyJson("editorOptions", JsonSerializer.toJson(options));
@@ -175,6 +185,8 @@ public class GridPro<E> extends Grid<E> {
 
         /**
          * Gets the list of options that is used for select type of the editor.
+         *
+         * @return the list of options
          */
         @Synchronize("editor-options-changed")
         protected List<String> getOptions() {
@@ -183,21 +195,17 @@ public class GridPro<E> extends Grid<E> {
     }
 
     /**
-     * Adds a new edit column to this {@link GridPro} with a value provider. The
-     * value is converted to String when sent to the client by using
-     * {@link String#valueOf(Object)}.
-     * <p>
-     * Every added column sends data to the client side regardless of its
-     * visibility state. Don't add a new column at all or use
-     * {@link GridPro#removeColumn(Column)} to avoid sending extra data.
-     * </p>
+     * Adds a new edit column to this {@link GridPro} with a value provider.
      * <p>
      * This method is based on {@link Grid#addColumn(ValueProvider)}.
      * </p>
      * <p>
      * The instance of {@link EditColumnConfigurator} should be provided as
      * second parameter in order to configure the needed type of the editor for the
-     * column.
+     * column. Available static methods to configure the needed editor type are:
+     * {@link EditColumnConfigurator#text(ItemUpdater)}
+     * {@link EditColumnConfigurator#checkbox(ItemUpdater)}
+     * {@link EditColumnConfigurator#select(ItemUpdater, List)}
      * </p>
      *
      * @param valueProvider
@@ -206,10 +214,10 @@ public class GridPro<E> extends Grid<E> {
      *            the instance of {@link EditColumnConfigurator} class which configures
      *            the column to operate with specific type of the editor
      * @return the created column
-     * @see EditColumnConfigurator#text(SerializableBiConsumer)
-     * @see EditColumnConfigurator#checkbox(SerializableBiConsumer)
-     * @see EditColumnConfigurator#select(SerializableBiConsumer, List)
      * @see Grid#addColumn(ValueProvider)
+     * @see EditColumnConfigurator#text(ItemUpdater)
+     * @see EditColumnConfigurator#checkbox(ItemUpdater)
+     * @see EditColumnConfigurator#select(ItemUpdater, List)
      * @see #removeColumn(Column)
      */
     public EditColumn<E> addEditColumn(ValueProvider<E, ?> valueProvider, EditColumnConfigurator columnConfigurator) {
@@ -223,22 +231,15 @@ public class GridPro<E> extends Grid<E> {
     /**
      * Adds a new edit column to this {@link GridPro} with a renderer.
      * <p>
-     * See implementations of the {@link Renderer} interface for built-in
-     * renderer options with type safe APIs. For a renderer using template
-     * binding, use {@link TemplateRenderer#of(String)}.
-     * </p>
-     * <p>
-     * Every added column sends data to the client side regardless of its
-     * visibility state. Don't add a new column at all or use
-     * {@link GridPro#removeColumn(Column)} to avoid sending extra data.
-     * </p>
-     * <p>
      * This method is based on {@link Grid#addColumn(Renderer)}.
      * </p>
      * <p>
      * The instance of {@link EditColumnConfigurator} should be provided as
      * second parameter in order to configure the needed type of the editor for the
-     * column.
+     * column. Available static methods to configure the needed editor type are:
+     * {@link EditColumnConfigurator#text(ItemUpdater)}
+     * {@link EditColumnConfigurator#checkbox(ItemUpdater)}
+     * {@link EditColumnConfigurator#select(ItemUpdater, List)}
      * </p>
      *
      * @param renderer
@@ -247,12 +248,10 @@ public class GridPro<E> extends Grid<E> {
      *            the instance of {@link EditColumnConfigurator} class which configures
      *            the column to operate with specific type of the editor
      * @return the created column
-     *
-     * @see EditColumnConfigurator#text(SerializableBiConsumer)
-     * @see EditColumnConfigurator#checkbox(SerializableBiConsumer)
-     * @see EditColumnConfigurator#select(SerializableBiConsumer, List)
      * @see Grid#addColumn(Renderer)
-     * @see TemplateRenderer#of(String)
+     * @see EditColumnConfigurator#text(ItemUpdater)
+     * @see EditColumnConfigurator#checkbox(ItemUpdater)
+     * @see EditColumnConfigurator#select(ItemUpdater, List)
      * @see #removeColumn(Column)
      */
     public EditColumn<E> addEditColumn(Renderer<E> renderer, EditColumnConfigurator columnConfigurator) {
@@ -264,27 +263,21 @@ public class GridPro<E> extends Grid<E> {
     }
 
     /**
-     * Adds a new edit column for the given property name. The property values are
-     * converted to Strings in the grid cells. The property's full name will be
-     * used as the {@link Column#setKey(String) column key} and the property
-     * caption will be used as the {@link Column#setHeader(String) column
-     * header}.
+     * Adds a new edit column for the given property name.
+     * <p>
+     * This method is based on {@link Grid#addColumn(String)}.
+     * </p>
      * <p>
      * <strong>Note:</strong> This method can only be used for a Grid created
      * from a bean type with {@link #GridPro(Class)}.
      * </p>
      * <p>
-     * Every added column sends data to the client side regardless of its
-     * visibility state. Don't add a new column at all or use
-     * {@link GridPro#removeColumn(Column)} to avoid sending extra data.
-     * </p>
-     * <p>
-     * This method is based on {@link Grid#addColumn(String)}.
-     * </p>
-     * <p>
      * The instance of {@link EditColumnConfigurator} should be provided as
      * second parameter in order to configure the needed type of the editor for the
-     * column.
+     * column. Available static methods to configure the needed editor type are:
+     * {@link EditColumnConfigurator#text(ItemUpdater)}
+     * {@link EditColumnConfigurator#checkbox(ItemUpdater)}
+     * {@link EditColumnConfigurator#select(ItemUpdater, List)}
      * </p>
      *
      * @see #removeColumn(Column)
@@ -296,10 +289,10 @@ public class GridPro<E> extends Grid<E> {
      *            the column to operate with specific type of the editor
      * @return the created column
      *
-     * @see EditColumnConfigurator#text(SerializableBiConsumer)
-     * @see EditColumnConfigurator#checkbox(SerializableBiConsumer)
-     * @see EditColumnConfigurator#select(SerializableBiConsumer, List)
      * @see Grid#addColumn(String)
+     * @see EditColumnConfigurator#text(ItemUpdater)
+     * @see EditColumnConfigurator#checkbox(ItemUpdater)
+     * @see EditColumnConfigurator#select(ItemUpdater, List)
      */
     public EditColumn<E> addEditColumn(String propertyName, EditColumnConfigurator columnConfigurator) {
         Objects.requireNonNull(columnConfigurator);
@@ -310,46 +303,50 @@ public class GridPro<E> extends Grid<E> {
     }
 
     /**
-     * Sets allowEnterRowChange value for this grid.
+     * Sets enterNextRow value for this grid.
      *
-     * @param allowEnterRowChange
+     * @param enterNextRow
      *            when <code>true</code>, after moving to next editable cell using
      *            Tab / Enter, it will be focused in edit mode
      */
-    public void setAllowEnterRowChange(boolean allowEnterRowChange) {
-        getElement().setProperty("allowEnterRowChange", allowEnterRowChange);
+    public void setEnterNextRow(boolean enterNextRow) {
+        getElement().setProperty("enterNextRow", enterNextRow);
     }
 
     /**
-     * Gets the allowEnterRowChange value for this grid.
-     */
-    @Synchronize("allow-enter-row-change-changed")
-    public boolean getAllowEnterRowChange() {
-        return getElement().getProperty("allowEnterRowChange", false);
-    }
-
-    /**
-     * Sets preserveEditMode value for this grid.
+     * Gets the enterNextRow value for this grid.
      *
-     * @param preserveEditMode
+     * @return enterNextRow value
+     */
+    @Synchronize("enter-next-row-changed")
+    public boolean getEnterNextRow() {
+        return getElement().getProperty("enterNextRow", false);
+    }
+
+    /**
+     * Sets keepEditorOpen value for this grid.
+     *
+     * @param keepEditorOpen
      *            when <code>true</code>, pressing Enter while in cell edit mode
      *            will move focus to the editable cell in the next row
      */
-    public void setPreserveEditMode(boolean preserveEditMode) {
-        getElement().setProperty("preserveEditMode", preserveEditMode);
+    public void setKeepEditorOpen(boolean keepEditorOpen) {
+        getElement().setProperty("keepEditorOpen", keepEditorOpen);
     }
 
     /**
-     * Gets the preserveEditMode value for this grid.
+     * Gets the keepEditorOpen value for this grid.
+     *
+     * @return keepEditorOpen value
      */
-    @Synchronize("preserve-edit-mode-changed")
-    public boolean getPreserveEditMode() {
-        return getElement().getProperty("preserveEditMode", false);
+    @Synchronize("keep-editor-open-changed")
+    public boolean getKeepEditorOpen() {
+        return getElement().getProperty("keepEditorOpen", false);
     }
 
     private EditColumn<E> configureEditColumn(EditColumn<E> column, EditColumnConfigurator columnConfigurator) {
         column.setEditorType(columnConfigurator.getType());
-        column.setCallback(columnConfigurator.getCallback());
+        column.setItemUpdater(columnConfigurator.getItemUpdater());
         column.setOptions(columnConfigurator.getOptions());
 
         return column;

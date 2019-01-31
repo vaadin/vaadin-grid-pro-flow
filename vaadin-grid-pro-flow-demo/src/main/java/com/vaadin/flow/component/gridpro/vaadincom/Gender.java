@@ -7,11 +7,11 @@ public enum Gender {
 
     private String stringRepresentation;
 
-    private Gender(String stringRepresentation) {
+    Gender(String stringRepresentation) {
         this.stringRepresentation = stringRepresentation;
     }
 
-    public static Gender getRandomCGender() {
+    public static Gender getRandomGender() {
         Random random = new Random();
         return Gender.values()[random.nextInt(values().length)];
     }

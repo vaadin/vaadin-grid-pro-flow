@@ -29,11 +29,13 @@ public class MainView extends VerticalLayout {
         grid.addColumn(Person::getAge).setHeader("Age");
 
         grid.addEditColumn(Person::getName, EditColumnConfigurator.text((item, newValue) -> {
+            item.setName(newValue);
             itemDisplayPanel.setText(item.toString());
             subPropertyDisplayPanel.setText(newValue);
         })).setHeader("Name").setWidth("300px");
 
         grid.addEditColumn(Person::isSubscriber, EditColumnConfigurator.checkbox((item, newValue) -> {
+            item.setSubscriber(newValue);
             itemDisplayPanel.setText(item.toString());
             subPropertyDisplayPanel.setText(newValue.toString());
         })).setHeader("Subscriber").setWidth("300px");
@@ -43,6 +45,7 @@ public class MainView extends VerticalLayout {
         listOptions.add("Female");
         listOptions.add("Unknown");
         grid.addEditColumn(Person::getGender, EditColumnConfigurator.select((item, newValue) -> {
+            item.setGender(Gender.valueOf(newValue));
             itemDisplayPanel.setText(item.toString());
             subPropertyDisplayPanel.setText(newValue);
         }, listOptions)).setHeader("Gender").setWidth("300px");

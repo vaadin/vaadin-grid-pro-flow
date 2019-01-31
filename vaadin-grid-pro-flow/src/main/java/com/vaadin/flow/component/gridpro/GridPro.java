@@ -218,7 +218,7 @@ public class GridPro<E> extends Grid<E> {
      * @see EditColumnConfigurator#select(ItemUpdater, List)
      * @see #removeColumn(Column)
      */
-    public EditColumn<E> addEditColumn(ValueProvider<E, ?> valueProvider, EditColumnConfigurator columnConfigurator) {
+    public EditColumn<E> addEditColumn(ValueProvider<E, ?> valueProvider, EditColumnConfigurator<E> columnConfigurator) {
         Objects.requireNonNull(columnConfigurator);
 
         EditColumn<E> column = this.addColumn(valueProvider, this::createEditColumn);
@@ -248,7 +248,7 @@ public class GridPro<E> extends Grid<E> {
      * @see EditColumnConfigurator#select(ItemUpdater, List)
      * @see #removeColumn(Column)
      */
-    public EditColumn<E> addEditColumn(Renderer<E> renderer, EditColumnConfigurator columnConfigurator) {
+    public EditColumn<E> addEditColumn(Renderer<E> renderer, EditColumnConfigurator<E> columnConfigurator) {
         Objects.requireNonNull(columnConfigurator);
 
         EditColumn<E> column = this.addColumn(renderer, this::createEditColumn);
@@ -283,7 +283,7 @@ public class GridPro<E> extends Grid<E> {
      * @see EditColumnConfigurator#checkbox(ItemUpdater)
      * @see EditColumnConfigurator#select(ItemUpdater, List)
      */
-    public EditColumn<E> addEditColumn(String propertyName, EditColumnConfigurator columnConfigurator) {
+    public EditColumn<E> addEditColumn(String propertyName, EditColumnConfigurator<E> columnConfigurator) {
         Objects.requireNonNull(columnConfigurator);
 
         EditColumn<E> column = this.addColumn(propertyName, this::createEditColumn);
@@ -293,6 +293,8 @@ public class GridPro<E> extends Grid<E> {
 
     /**
      * Sets the value of the webcomponent's property enterNextRow. Default values is false.
+     * When true, pressing Enter while in cell edit mode will move focus to the editable cell
+     * in the next row (Shift + Enter - same, but for previous row).
      *
      * @param enterNextRow
      *            when <code>true</code>, pressing Enter while in cell edit mode will move focus
@@ -316,6 +318,8 @@ public class GridPro<E> extends Grid<E> {
 
     /**
      * Sets the value of the webcomponent's property keepEditorOpen. Default values is false.
+     * When true, after moving to next or previous editable cell using Tab / Shift+Tab,
+     * it will be focused in edit mode.
      *
      * @param keepEditorOpen
      *            when <code>true</code>, after moving to next or previous editable cell
@@ -337,7 +341,7 @@ public class GridPro<E> extends Grid<E> {
         return getElement().getProperty("keepEditorOpen", false);
     }
 
-    private EditColumn<E> configureEditColumn(EditColumn<E> column, EditColumnConfigurator columnConfigurator) {
+    private EditColumn<E> configureEditColumn(EditColumn<E> column, EditColumnConfigurator<E> columnConfigurator) {
         column.setEditorType(columnConfigurator.getType());
         column.setItemUpdater(columnConfigurator.getItemUpdater());
         column.setOptions(columnConfigurator.getOptions());

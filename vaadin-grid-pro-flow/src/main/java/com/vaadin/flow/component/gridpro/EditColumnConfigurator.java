@@ -19,6 +19,7 @@ package com.vaadin.flow.component.gridpro;
 
 import com.vaadin.flow.function.SerializableFunction;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
  *
  * @author Vaadin Ltd.
  */
-public class EditColumnConfigurator<T> {
+public class EditColumnConfigurator<T> implements Serializable {
 
     private ItemUpdater<T, String> itemUpdater;
     private EditorType type;
@@ -138,6 +139,8 @@ public class EditColumnConfigurator<T> {
      *            the callback function that is called when item is changed.
      *            It receives two arguments: item and newValue.
      * @return the instance of EditColumnConfigurator
+     * @throws IllegalArgumentException
+     *             if any of the enum constants have the same string representation
      */
     public static <T, E extends Enum<E>> EditColumnConfigurator<T> select(ItemUpdater<T, E> itemUpdater, Class<E> enumType, SerializableFunction<E, String> getStringRepresentation) {
         Map<String, E> map = new HashMap<>();

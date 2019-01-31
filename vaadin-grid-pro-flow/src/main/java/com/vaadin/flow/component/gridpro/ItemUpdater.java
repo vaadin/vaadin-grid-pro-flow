@@ -20,8 +20,8 @@ package com.vaadin.flow.component.gridpro;
 import com.vaadin.flow.function.SerializableBiConsumer;
 
 /**
- * {@link ItemUpdater} is used to modify the instance of the item of {@link GridPro}
- * that was modified in webcomponent.
+ * Callback that is called when a new value has been entered to an editor.
+ *
  *
  * @param <T>
  *            the item type
@@ -32,8 +32,7 @@ import com.vaadin.flow.function.SerializableBiConsumer;
 public interface ItemUpdater<T, V> extends SerializableBiConsumer<T, V> {
 
     /**
-     * Performs this operation on the instance of {@link GridPro}'s item
-     * that was modified in webcomponent and newValue for its subproperty.
+     * Called when a new value has been entered to an editor for an item.
      *
      * @param item
      *            the instance of the item

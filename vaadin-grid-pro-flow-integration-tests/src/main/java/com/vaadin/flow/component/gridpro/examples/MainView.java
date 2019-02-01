@@ -41,14 +41,14 @@ public class MainView extends VerticalLayout {
         })).setHeader("Subscriber").setWidth("300px");
 
         List<String> listOptions = new ArrayList<>();
-        listOptions.add("Male");
-        listOptions.add("Female");
-        listOptions.add("Unknown");
-        grid.addEditColumn(Person::getGender, EditColumnConfigurator.select((item, newValue) -> {
-            item.setGender(Gender.valueOf(newValue));
+        listOptions.add("Services");
+        listOptions.add("Marketing");
+        listOptions.add("Sales");
+        grid.addEditColumn(Person::getDepartment, EditColumnConfigurator.select((item, newValue) -> {
+            item.setDepartment(Department.valueOf(newValue));
             itemDisplayPanel.setText(item.toString());
             subPropertyDisplayPanel.setText(newValue);
-        }, listOptions)).setHeader("Gender").setWidth("300px");
+        }, listOptions)).setHeader("Department").setWidth("300px");
 
         add(grid, itemDisplayPanel, subPropertyDisplayPanel);
     }
@@ -66,7 +66,7 @@ public class MainView extends VerticalLayout {
         person.setEmail("person" + index + "@vaadin.com");
         person.setName("Person " + index);
         person.setAge(13 + random.nextInt(50));
-        person.setGender(Gender.getRandomGender());
+        person.setDepartment(Department.getRandomDepartment());
 
         return person;
     }

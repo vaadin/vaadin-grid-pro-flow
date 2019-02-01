@@ -114,7 +114,7 @@ public class GridProView extends DemoView {
         person.setEmail("person" + index + "@vaadin.com");
         person.setName("Person " + index);
         person.setAge(13 + random.nextInt(50));
-        person.setGender(Gender.getRandomGender());
+        person.setDepartment(Department.getRandomDepartment());
 
         return person;
     }

@@ -2,18 +2,18 @@ package com.vaadin.flow.component.gridpro.vaadincom;
 
 import java.util.Random;
 
-public enum Gender {
-    MALE("Male"), FEMALE("Female"), UNKNOWN("Unknown");
+public enum Department {
+    SERVICES("services"), MARKETING("marketing"), SALES("sales");
 
     private String stringRepresentation;
 
-    Gender(String stringRepresentation) {
+    Department(String stringRepresentation) {
         this.stringRepresentation = stringRepresentation;
     }
 
-    public static Gender getRandomGender() {
+    public static Department getRandomDepartment() {
         Random random = new Random();
-        return Gender.values()[random.nextInt(values().length)];
+        return Department.values()[random.nextInt(values().length)];
     }
 
     public String getStringRepresentation() {

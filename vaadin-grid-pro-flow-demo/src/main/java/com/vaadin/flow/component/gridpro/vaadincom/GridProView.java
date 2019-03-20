@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.vaadin.flow.component.gridpro.GridPro;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.demo.DemoView;
 import com.vaadin.flow.router.Route;
 
@@ -17,6 +19,7 @@ public class GridProView extends DemoView {
     protected void initView() {
         basicGridPro();
         editorTypes();
+        customRepresentation();
         enterNextRow();
         keepEditorOpen();
     }
@@ -66,6 +69,35 @@ public class GridProView extends DemoView {
         // end-source-example
 
         addCard("Editor Types", grid);
+    }
+
+    private void customRepresentation() {
+        // begin-source-example
+        // source-example-heading: Custom Representation
+        GridPro<Person> grid = new GridPro<>();
+        grid.setItems(createItems());
+
+        /*
+         * Grid Pro is an extension of the Grid and provides all
+         * the same functionality on top of basic one.
+         * It is possible to use Grid's API in Grid Pro.
+         */
+        grid.addColumn(Person::getName).setHeader("NAME");
+
+        /*
+         * Using ComponentRenderer to create a custom representation of the boolean value.
+         */
+        ComponentRenderer<Span, Person> booleanRenederer = new ComponentRenderer<>(person -> {
+            if (person.isSubscriber()) {
+                return new Span("Yes");
+            } else {
+                return new Span("No");
+            }
+        });
+        grid.addComponentEditColumn(Person::isSubscriber, booleanRenederer).checkbox((item, newValue) -> {}).setHeader("Subscriber (editable)");
+        // end-source-example
+
+        addCard("Basic Grid Pro", grid);
     }
 
     private void enterNextRow() {

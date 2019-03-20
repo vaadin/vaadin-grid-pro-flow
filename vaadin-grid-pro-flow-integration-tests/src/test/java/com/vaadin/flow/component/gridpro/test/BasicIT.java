@@ -27,6 +27,12 @@ public class BasicIT extends AbstractParallelTest {
     }
 
     @Test
+    public void customRepresentationIsRendered() {
+        GridTHTDElement cell = grid.getCell(0, 2);
+        Assert.assertTrue(cell.innerHTMLContains("<span>No</span>"));
+    }
+
+    @Test
     public void textEditorIsUsedForTextColumn() {
         AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-grid-pro-edit-text-field");
     }

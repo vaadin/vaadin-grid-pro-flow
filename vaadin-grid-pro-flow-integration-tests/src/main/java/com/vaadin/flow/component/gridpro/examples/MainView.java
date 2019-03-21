@@ -35,14 +35,10 @@ public class MainView extends VerticalLayout {
             subPropertyDisplayPanel.setText(newValue);
         }).setHeader("Name").setWidth("300px");
 
-        ComponentRenderer<Span, Person> booleanRenederer = new ComponentRenderer<>(person -> {
-            if (person.isSubscriber()) {
-                return new Span("Yes");
-            } else {
-                return new Span("No");
-            }
-        });
-        grid.addComponentEditColumn(Person::isSubscriber, booleanRenederer).checkbox((item, newValue) -> {
+        ComponentRenderer<Span, Person> booleanRenderer = new ComponentRenderer<>(person ->
+            new Span(person.isSubscriber() ? "Yes" : "No")
+        );
+        grid.addComponentEditColumn(Person::isSubscriber, booleanRenderer).checkbox((item, newValue) -> {
             item.setSubscriber(newValue);
             itemDisplayPanel.setText(item.toString());
             subPropertyDisplayPanel.setText(newValue.toString());

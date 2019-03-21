@@ -3,8 +3,6 @@ package com.vaadin.flow.component.gridpro.test;
 import com.vaadin.flow.component.gridpro.testbench.GridProElement;
 import com.vaadin.flow.component.gridpro.testbench.GridTHTDElement;
 import com.vaadin.testbench.TestBenchElement;
-import com.vaadin.testbench.annotations.RunLocally;
-import com.vaadin.testbench.parallel.Browser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +10,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-@RunLocally(Browser.CHROME)
 public class BasicIT extends AbstractParallelTest {
 
     private GridProElement grid;
@@ -32,7 +29,7 @@ public class BasicIT extends AbstractParallelTest {
     @Test
     public void customRepresentationIsRendered() {
         GridTHTDElement cell = grid.getCell(0, 2);
-        Assert.assertTrue(cell.innerHTMLContains("No"));
+        Assert.assertEquals("No", cell.$("span").first().getText());
     }
 
     @Test

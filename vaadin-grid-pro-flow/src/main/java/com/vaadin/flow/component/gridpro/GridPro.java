@@ -104,7 +104,7 @@ public class GridPro<E> extends Grid<E> {
 
             column.getItemUpdater().accept(e.getItem(), e.getSourceItem().get(e.getPath()).asString());
 
-            getDataProvider().refreshAll();
+            getDataProvider().refreshItem(e.getItem());
         });
     }
 
@@ -461,7 +461,7 @@ public class GridPro<E> extends Grid<E> {
      *            the object model type
      * @see GridPro#addComponentEditColumn(ValueProvider, Renderer)
      */
-    public class ColumnComponentPathRenderer<SOURCE> extends ColumnPathRenderer<SOURCE> {
+    class ColumnComponentPathRenderer<SOURCE> extends ColumnPathRenderer<SOURCE> {
         private Renderer<SOURCE> representationRenderer;
 
         /**
@@ -484,22 +484,21 @@ public class GridPro<E> extends Grid<E> {
         public Rendering<SOURCE> render(Element container,
                                         DataKeyMapper<SOURCE> keyMapper, Element contentTemplate) {
 
-            Rendering<SOURCE> render1 = super.render(container, keyMapper, contentTemplate);
-
-            Rendering<SOURCE> render = representationRenderer.render(container, keyMapper);
+            Rendering<SOURCE> columnPathRendering = super.render(container, keyMapper, contentTemplate);
+            Rendering<SOURCE> representationRendering = representationRenderer.render(container, keyMapper);
 
             return new Rendering<SOURCE>() {
                 @Override
                 public Optional<DataGenerator<SOURCE>> getDataGenerator() {
                     CompositeDataGenerator<SOURCE> compositeDataGenerator = new CompositeDataGenerator<>();
-                    compositeDataGenerator.addDataGenerator(render.getDataGenerator().get());
-                    compositeDataGenerator.addDataGenerator(render1.getDataGenerator().get());
+                    compositeDataGenerator.addDataGenerator(representationRendering.getDataGenerator().get());
+                    compositeDataGenerator.addDataGenerator(columnPathRendering.getDataGenerator().get());
                     return Optional.of(compositeDataGenerator);
                 }
 
                 @Override
                 public Element getTemplateElement() {
-                    return render.getTemplateElement();
+                    return representationRendering.getTemplateElement();
                 }
             };
         }

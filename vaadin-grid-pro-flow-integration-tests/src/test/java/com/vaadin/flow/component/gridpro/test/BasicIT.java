@@ -6,6 +6,7 @@ import com.vaadin.testbench.TestBenchElement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.interactions.Actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +38,13 @@ public class BasicIT extends AbstractParallelTest {
         GridTHTDElement cell = grid.getCell(0, 2);
         Assert.assertEquals("No", cell.$("span").first().getText());
 
-        cell.doubleClick();
+        Actions action = new Actions(driver);
+        action.moveToElement(cell).doubleClick().build().perform();
         cell.$("vaadin-grid-pro-edit-checkbox").first().click();
 
         // Simulate entering next cell for editing
         GridTHTDElement nextCell = grid.getCell(0, 2);
-        nextCell.doubleClick();
+        action.moveToElement(nextCell).doubleClick().build().perform();
 
         Assert.assertEquals("Yes", cell.$("span").first().getText());
     }

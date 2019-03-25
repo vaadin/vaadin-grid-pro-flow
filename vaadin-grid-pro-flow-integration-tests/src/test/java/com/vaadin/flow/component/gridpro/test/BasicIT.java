@@ -33,6 +33,21 @@ public class BasicIT extends AbstractParallelTest {
     }
 
     @Test
+    public void customRepresentationIsEdited() {
+        GridTHTDElement cell = grid.getCell(0, 2);
+        Assert.assertEquals("No", cell.$("span").first().getText());
+
+        cell.doubleClick();
+        cell.$("vaadin-grid-pro-edit-checkbox").first().click();
+
+        // Simulate entering next cell for editing
+        GridTHTDElement nextCell = grid.getCell(0, 2);
+        nextCell.doubleClick();
+
+        Assert.assertEquals("Yes", cell.$("span").first().getText());
+    }
+
+    @Test
     public void textEditorIsUsedForTextColumn() {
         AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-grid-pro-edit-text-field");
     }

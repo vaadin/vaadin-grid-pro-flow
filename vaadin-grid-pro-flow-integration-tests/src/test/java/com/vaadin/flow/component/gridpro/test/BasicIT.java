@@ -6,7 +6,6 @@ import com.vaadin.testbench.TestBenchElement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +38,11 @@ public class BasicIT extends AbstractParallelTest {
         Assert.assertEquals("No", cell.$("span").first().getText());
 
         AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-grid-pro-edit-checkbox");
-        cell.$("vaadin-grid-pro-edit-checkbox").first().click();
-        cell.sendKeys(Keys.ENTER);
+        TestBenchElement checkbox = cell.$("vaadin-grid-pro-edit-checkbox").first();
+        checkbox.click();
+        checkbox.dispatchEvent("focusout");
 
+        waitUntil(driver -> cell.$("span").exists());
         Assert.assertEquals("Yes", cell.$("span").first().getText());
     }
 

@@ -27,6 +27,24 @@ public class BasicIT extends AbstractParallelTest {
     }
 
     @Test
+    public void headerSorterIsRendered() {
+        GridTHTDElement headerCell = grid.getHeaderCell(1);
+        Assert.assertTrue(headerCell.$("vaadin-grid-sorter").exists());
+    }
+
+    @Test
+    public void headerSorterCanBeToggled() {
+        GridTHTDElement headerCell = grid.getHeaderCell(1);
+        GridTHTDElement bodyCell = grid.getCell(0, 1);
+
+        TestBenchElement sorter = headerCell.$("vaadin-grid-sorter").first();
+        Assert.assertEquals("Person 1", bodyCell.getInnerHTML());
+        sorter.click();
+        sorter.click();
+        Assert.assertEquals("Person 99", bodyCell.getInnerHTML());
+    }
+
+    @Test
     public void customRepresentationIsRendered() {
         GridTHTDElement cell = grid.getCell(0, 2);
         Assert.assertEquals("No", cell.$("span").first().getText());

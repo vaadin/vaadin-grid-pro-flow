@@ -6,7 +6,7 @@ import com.vaadin.testbench.TestBenchElement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.Keys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +38,9 @@ public class BasicIT extends AbstractParallelTest {
         GridTHTDElement cell = grid.getCell(0, 2);
         Assert.assertEquals("No", cell.$("span").first().getText());
 
-        Actions action = new Actions(driver);
-        action.moveToElement(cell).doubleClick().build().perform();
+        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-grid-pro-edit-checkbox");
         cell.$("vaadin-grid-pro-edit-checkbox").first().click();
-
-        // Simulate entering next cell for editing
-        GridTHTDElement nextCell = grid.getCell(0, 2);
-        action.moveToElement(nextCell).doubleClick().build().perform();
+        cell.sendKeys(Keys.ENTER);
 
         Assert.assertEquals("Yes", cell.$("span").first().getText());
     }
@@ -81,8 +77,11 @@ public class BasicIT extends AbstractParallelTest {
 
         // Entering edit mode with double click
         // Workaround(yuriy-fix): doubleClick is not working on IE11
-        cell.click();
-        cell.click();
-        cell.innerHTMLContains(editorTag);
+        executeScript(
+    "var cellContent = arguments[0].firstElementChild.assignedNodes()[0];" +
+            "var clickEvent = document.createEvent('MouseEvents');" +
+            "clickEvent.initEvent('dblclick', true, true);" +
+            "cellContent.dispatchEvent(clickEvent);", cell);
+        Assert.assertTrue(cell.innerHTMLContains(editorTag));
     }
 }

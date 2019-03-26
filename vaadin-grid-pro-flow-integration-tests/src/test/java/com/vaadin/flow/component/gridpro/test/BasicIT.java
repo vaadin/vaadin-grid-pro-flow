@@ -78,11 +78,8 @@ public class BasicIT extends AbstractParallelTest {
 
         // Entering edit mode with double click
         // Workaround(yuriy-fix): doubleClick is not working on IE11
-        executeScript(
-    "var cellContent = arguments[0].firstElementChild.assignedNodes()[0];" +
-            "var clickEvent = document.createEvent('MouseEvents');" +
-            "clickEvent.initEvent('dblclick', true, true);" +
-            "cellContent.dispatchEvent(clickEvent);", cell);
+        executeScript("var cellContent = arguments[0].firstElementChild.assignedNodes()[0];" +
+            "cellContent.dispatchEvent(new CustomEvent('dblclick', {composed: true, bubbles: true}));", cell);
         Assert.assertTrue(cell.innerHTMLContains(editorTag));
     }
 }

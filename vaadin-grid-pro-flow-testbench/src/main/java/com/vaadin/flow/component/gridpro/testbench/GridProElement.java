@@ -126,7 +126,7 @@ public class GridProElement extends TestBenchElement {
      */
     public TestBenchElement getHeaderCellContent(int rowIndex,
                                                  int columnIndex) {
-        WebElement thead = findInShadowRoot(By.id("header")).get(0);
+        WebElement thead = $("thead").id("header");
         List<WebElement> headerRows = thead.findElements(By.tagName("tr"));
         List<WebElement> headerCells = headerRows.get(rowIndex)
                 .findElements(By.tagName("th"));
@@ -135,27 +135,6 @@ public class GridProElement extends TestBenchElement {
 
         return findElement(By.cssSelector(
                 "vaadin-grid-cell-content[slot='" + slotName + "']"));
-    }
-
-    /**
-     * Find all {@link WebElement}s using the given {@link By} selector.
-     *
-     * @param by
-     *            the selector used to find elements
-     * @return a list of found elements
-     */
-    public List<WebElement> findInShadowRoot(By by) {
-        return getShadowRoot().findElements(by);
-    }
-
-    private WebElement getShadowRoot() {
-        waitUntil(driver -> getCommandExecutor()
-                .executeScript("return arguments[0].shadowRoot", this) != null);
-        WebElement shadowRoot = (WebElement) getCommandExecutor()
-                .executeScript("return arguments[0].shadowRoot", this);
-        Assert.assertNotNull("Could not locate shadowRoot in the element",
-                shadowRoot);
-        return shadowRoot;
     }
 
     /**

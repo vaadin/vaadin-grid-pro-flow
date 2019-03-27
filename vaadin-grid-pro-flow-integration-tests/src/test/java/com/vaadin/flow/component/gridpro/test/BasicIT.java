@@ -31,6 +31,10 @@ public class BasicIT extends AbstractParallelTest {
     public void columnIsRenderedInBeanGrid() {
         GridTHTDElement cell = beanGrid.getCell(0, 0);
         Assert.assertEquals("Person 1", cell.getInnerHTML());
+        // Entering edit mode with double click
+        executeScript("var cellContent = arguments[0].firstElementChild.assignedNodes()[0];" +
+                "cellContent.dispatchEvent(new CustomEvent('dblclick', {composed: true, bubbles: true}));", cell);
+        Assert.assertTrue(cell.innerHTMLContains("vaadin-grid-pro-edit-text-field"));
     }
 
     @Test

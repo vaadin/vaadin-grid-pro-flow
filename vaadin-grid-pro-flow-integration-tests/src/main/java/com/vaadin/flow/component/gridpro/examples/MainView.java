@@ -63,7 +63,7 @@ public class MainView extends VerticalLayout {
         beanGrid.setColumns();
         beanGrid.setItems(createItems());
 
-        beanGrid.addEditColumn("name").text((item, newValue) -> item.setEmail(newValue));
+        beanGrid.addEditColumn("name").text((item, newValue) -> item.setName(newValue));
 
         add(beanGrid);
     }

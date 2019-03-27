@@ -12,18 +12,25 @@ import java.util.List;
 
 public class BasicIT extends AbstractParallelTest {
 
-    private GridProElement grid;
+    private GridProElement grid, beanGrid;
 
     @Before
     public void init() {
         getDriver().get(getBaseURL());
         grid = $(GridProElement.class).waitForFirst();
+        beanGrid = $(GridProElement.class).get(1);
     }
 
     @Test
     public void editColumnsAdded() {
         List<TestBenchElement> columns = grid.$("vaadin-grid-pro-edit-column").all();
         Assert.assertEquals(columns.size(), 3);
+    }
+
+    @Test
+    public void columnIsRenderedInBeanGrid() {
+        GridTHTDElement cell = beanGrid.getCell(0, 0);
+        Assert.assertEquals("Person 1", cell.getInnerHTML());
     }
 
     @Test

@@ -229,7 +229,8 @@ public class GridPro<E> extends Grid<E> {
 
     /**
      * Adds a new edit column to this {@link GridPro} with a value provider 
-     * and renderer for custom representation of the value in the column.
+     * and renderer which is used to display the content when the cell is
+     * not in the edit mode.
      *
      * @param valueProvider
      *            the value provider

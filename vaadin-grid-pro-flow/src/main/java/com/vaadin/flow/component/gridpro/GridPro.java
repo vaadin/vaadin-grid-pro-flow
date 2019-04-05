@@ -243,7 +243,7 @@ public class GridPro<E> extends Grid<E> {
      * @see EditColumnConfigurator#select(ItemUpdater, List)
      * @see #removeColumn(Column)
      */
-    public EditColumnConfigurator<E> addComponentEditColumn(ValueProvider<E, ?> valueProvider, Renderer<E> renderer) {
+    public EditColumnConfigurator<E> addEditColumn(ValueProvider<E, ?> valueProvider, Renderer<E> renderer) {
         String columnId = createColumnId(false);
 
         EditColumn<E> column = this.addColumn((new ColumnComponentPathRenderer<>(columnId,
@@ -485,7 +485,7 @@ public class GridPro<E> extends Grid<E> {
      *
      * @param <SOURCE>
      *            the object model type
-     * @see GridPro#addComponentEditColumn(ValueProvider, Renderer)
+     * @see GridPro#addEditColumn(ValueProvider, Renderer)
      */
     class ColumnComponentPathRenderer<SOURCE> extends ColumnPathRenderer<SOURCE> {
         private Renderer<SOURCE> representationRenderer;

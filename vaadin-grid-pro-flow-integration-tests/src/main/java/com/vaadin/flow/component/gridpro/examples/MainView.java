@@ -6,10 +6,13 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 
@@ -36,6 +39,14 @@ public class MainView extends VerticalLayout {
             subPropertyDisplayPanel.setText(newValue);
         }).setHeader("Name").setWidth("300px");
 
+        ComboBox<Department> cb = new ComboBox<>();
+        cb.setItems(Department.values());
+        grid.addEditColumn(Person::getDepartment).custom(cb, (item, newValue) -> {
+            item.setDepartment(newValue);
+            itemDisplayPanel.setText(item.toString());
+            subPropertyDisplayPanel.setText(newValue.toString());
+        }).setHeader("Department").setWidth("300px");
+
         ComponentRenderer<Span, Person> booleanRenderer = new ComponentRenderer<>(person ->
             new Span(person.isSubscriber() ? "Yes" : "No")
         );
@@ -45,16 +56,6 @@ public class MainView extends VerticalLayout {
             subPropertyDisplayPanel.setText(newValue.toString());
         }).setHeader("Subscriber").setWidth("300px");
 
-        List<String> listOptions = new ArrayList<>();
-        listOptions.add("Services");
-        listOptions.add("Marketing");
-        listOptions.add("Sales");
-        grid.addEditColumn(Person::getDepartment).select((item, newValue) -> {
-            item.setDepartment(fromStringRepresentation((newValue)));
-            itemDisplayPanel.setText(item.toString());
-            subPropertyDisplayPanel.setText(newValue);
-        }, listOptions).setHeader("Department").setWidth("300px");
-
         add(grid, itemDisplayPanel, subPropertyDisplayPanel);
     }
 
@@ -63,7 +64,18 @@ public class MainView extends VerticalLayout {
         beanGrid.setColumns();
         beanGrid.setItems(createItems());
 
-        beanGrid.addEditColumn("name").text((item, newValue) -> item.setName(newValue));
+        beanGrid.addEditColumn("age").text((item, newValue) -> item.setAge(Integer.valueOf(newValue)));
+
+        TextField textField = new TextField();
+        beanGrid.addEditColumn("name").custom(textField, (item, newValue) -> item.setName(newValue));
+
+        List<String> listOptions = new ArrayList<>();
+        listOptions.add("Services");
+        listOptions.add("Marketing");
+        listOptions.add("Sales");
+        beanGrid.addEditColumn("department").select((item, newValue) -> {
+            item.setDepartment(fromStringRepresentation((newValue)));
+        }, listOptions).setHeader("Department").setWidth("300px");
 
         add(beanGrid);
     }

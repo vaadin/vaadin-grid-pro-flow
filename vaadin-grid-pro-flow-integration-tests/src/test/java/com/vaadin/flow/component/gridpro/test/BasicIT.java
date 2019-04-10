@@ -3,6 +3,8 @@ package com.vaadin.flow.component.gridpro.test;
 import com.vaadin.flow.component.gridpro.testbench.GridProElement;
 import com.vaadin.flow.component.gridpro.testbench.GridTHTDElement;
 import com.vaadin.testbench.TestBenchElement;
+import com.vaadin.testbench.annotations.RunLocally;
+import com.vaadin.testbench.parallel.Browser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +12,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+@RunLocally(Browser.CHROME)
 public class BasicIT extends AbstractParallelTest {
 
     private GridProElement grid, beanGrid;
@@ -30,7 +33,7 @@ public class BasicIT extends AbstractParallelTest {
     @Test
     public void columnIsRenderedInBeanGrid() {
         GridTHTDElement cell = beanGrid.getCell(0, 0);
-        Assert.assertEquals("Person 1", cell.getInnerHTML());
+        Assert.assertEquals("23", cell.getInnerHTML());
         AssertCellEnterEditModeOnDoubleClick(0, 0, "vaadin-grid-pro-edit-text-field", beanGrid);
     }
 
@@ -71,16 +74,16 @@ public class BasicIT extends AbstractParallelTest {
 
     @Test
     public void customRepresentationIsRendered() {
-        GridTHTDElement cell = grid.getCell(0, 2);
+        GridTHTDElement cell = grid.getCell(0, 3);
         Assert.assertEquals("No", cell.$("span").first().getText());
     }
 
     @Test
     public void customRepresentationIsEdited() {
-        GridTHTDElement cell = grid.getCell(0, 2);
+        GridTHTDElement cell = grid.getCell(0, 3);
         Assert.assertEquals("No", cell.$("span").first().getText());
 
-        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-grid-pro-edit-checkbox");
+        AssertCellEnterEditModeOnDoubleClick(0, 3, "vaadin-grid-pro-edit-checkbox");
         TestBenchElement checkbox = cell.$("vaadin-grid-pro-edit-checkbox").first();
         checkbox.click();
         checkbox.dispatchEvent("focusout");
@@ -95,18 +98,28 @@ public class BasicIT extends AbstractParallelTest {
     }
 
     @Test
+    public void customComboBoxIsUsedForEditColumn() {
+        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-combo-box");
+    }
+
+    @Test
     public void checkboxEditorIsUsedForCheckboxColumn() {
-        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-grid-pro-edit-checkbox");
+        AssertCellEnterEditModeOnDoubleClick(0, 3, "vaadin-grid-pro-edit-checkbox");
+    }
+
+    @Test
+    public void customTextFieldIsUsedForEditColumn() {
+        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", beanGrid);
     }
 
     @Test
     public void selectEditorIsUsedForSelectColumn() {
-        AssertCellEnterEditModeOnDoubleClick(0, 3, "vaadin-grid-pro-edit-select-wrapper");
+        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-grid-pro-edit-select-wrapper", beanGrid);
     }
 
     @Test
     public void selectEditorOptionsAreSet() {
-        GridTHTDElement cell = grid.getCell(0, 3);
+        GridTHTDElement cell = beanGrid.getCell(0, 2);
         ArrayList optionsList = cell.getColumn().getOptionsList();
         Assert.assertTrue(optionsList.contains("Services"));
         Assert.assertTrue(optionsList.contains("Marketing"));

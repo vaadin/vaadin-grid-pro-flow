@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValueAndElement;
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.gridpro.GridPro.EditColumn;
@@ -51,7 +50,7 @@ public class EditColumnConfigurator<T> implements Serializable {
      * @param column
      *            the column to edit, not <code>null</code>
      */
-    public EditColumnConfigurator(EditColumn<T> column, ValueProvider<T, ?> valueProvider) {
+    EditColumnConfigurator(EditColumn<T> column, ValueProvider<T, ?> valueProvider) {
         assert column != null;
         this.column = column;
         this.column.setValueProvider(valueProvider);
@@ -67,11 +66,10 @@ public class EditColumnConfigurator<T> implements Serializable {
     }
 
     private <V> Column<T> configureColumn(ItemUpdater<T, String> itemUpdater,
-                                      EditorType type, List<String> options, HasValueAndElement<?, V> editorField) {
+                                      EditorType type, AbstractField<?, V> editorField) {
         column.setEditorType(type);
         column.setItemUpdater(itemUpdater);
-        column.setOptions(options);
-        column.setEditorField((Component) editorField);
+        column.setEditorField(editorField);
 
         return getColumn();
     }
@@ -99,17 +97,16 @@ public class EditColumnConfigurator<T> implements Serializable {
                 Collections.emptyList());
     }
 
-    public <V> Column<T> custom(HasValueAndElement<?, V> component, ItemUpdater<T, V> itemUpdater) {
+    public <V> Column<T> custom(AbstractField<?, V> component, ItemUpdater<T, V> itemUpdater) {
         column.getElement().appendVirtualChild(component.getElement());
         column.getElement().getNode()
                 .runWhenAttached(ui -> ui.beforeClientResponse(column,
                         context -> setEditModeRenderer(component)));
 
-        return configureColumn((item, ignore) -> itemUpdater.accept(item, component.getValue()), EditorType.CUSTOM,
-                Collections.emptyList(), component);
+        return configureColumn((item, ignore) -> itemUpdater.accept(item, component.getValue()), EditorType.CUSTOM, component);
     }
 
-    private <V> void setEditModeRenderer(HasValueAndElement<?, V> component) {
+    private <V> void setEditModeRenderer(AbstractField<?, V> component) {
         UI.getCurrent().getPage().executeJavaScript(
                 "window.Vaadin.Flow.editColumnConnector.setEditModeRenderer($0, $1)",
                 column.getElement(), component.getElement());

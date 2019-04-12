@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.ComponentUtil;
@@ -120,7 +119,7 @@ public class GridPro<E> extends Grid<E> {
             EditColumn<E> column = (EditColumn<E>) this.idToColumnMap.get(e.getPath());
 
             if (column.getEditorType().equals("custom")) {
-                ((HasValue) column.getEditorField()).setValue(column.getValueProvider().apply(e.getItem()));
+                column.getEditorField().setValue(column.getValueProvider().apply(e.getItem()));
             }
         });
     }
@@ -140,7 +139,7 @@ public class GridPro<E> extends Grid<E> {
     public static class EditColumn<T> extends Column<T> {
 
         private ItemUpdater<T, String> itemUpdater;
-        private Component editorField;
+        private AbstractField editorField;
         private ValueProvider<T, ?> valueProvider;
 
         /**
@@ -180,11 +179,11 @@ public class GridPro<E> extends Grid<E> {
             return itemUpdater;
         }
 
-        protected Component getEditorField() {
+        protected AbstractField getEditorField() {
             return editorField;
         }
 
-        protected void setEditorField(Component editorField) {
+        protected void setEditorField(AbstractField editorField) {
             this.editorField = editorField;
         }
 
@@ -450,7 +449,7 @@ public class GridPro<E> extends Grid<E> {
          *
          * @return the key of the column
          */
-        public String getPath() {
+        private String getPath() {
             return path;
         }
     }
@@ -461,7 +460,7 @@ public class GridPro<E> extends Grid<E> {
      * @param listener a listener to be notified
      * @return a handle that can be used to unregister the listener
      */
-    public Registration addCellEditStartedListener(ComponentEventListener<CellEditStartedEvent<E>> listener) {
+    Registration addCellEditStartedListener(ComponentEventListener<CellEditStartedEvent<E>> listener) {
         return ComponentUtil.addListener(this, CellEditStartedEvent.class,
                 (ComponentEventListener) listener);
     }

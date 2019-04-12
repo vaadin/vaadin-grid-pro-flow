@@ -44,7 +44,7 @@ public class MainView extends VerticalLayout {
         grid.addEditColumn(Person::getDepartment).custom(cb, (item, newValue) -> {
             item.setDepartment(newValue);
             itemDisplayPanel.setText(item.toString());
-            subPropertyDisplayPanel.setText(newValue.toString());
+            subPropertyDisplayPanel.setText(String.valueOf(newValue));
         }).setHeader("Department").setWidth("300px");
 
         ComponentRenderer<Span, Person> booleanRenderer = new ComponentRenderer<>(person ->

@@ -1,4 +1,4 @@
-window.Vaadin.Flow.editColumnConnector = {
+window.Vaadin.Flow.gridProConnector = {
   setEditModeRenderer: function(column, component) {
       column.editModeRenderer = function(root) {
           root.appendChild(component);

@@ -100,6 +100,15 @@ public class BasicIT extends AbstractParallelTest {
     }
 
     @Test
+    public void customComboBoxIsGettingValue() {
+        GridTHTDElement cell = grid.getCell(0, 2);
+        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-combo-box");
+        TestBenchElement comboBox = cell.$("vaadin-combo-box").first();
+
+        Assert.assertEquals("1", comboBox.getProperty("value"));
+    }
+
+    @Test
     public void checkboxEditorIsUsedForCheckboxColumn() {
         AssertCellEnterEditModeOnDoubleClick(0, 3, "vaadin-grid-pro-edit-checkbox");
     }
@@ -107,6 +116,15 @@ public class BasicIT extends AbstractParallelTest {
     @Test
     public void customTextFieldIsUsedForEditColumn() {
         AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", beanGrid);
+    }
+
+    @Test
+    public void customTextFieldIsGettingValue() {
+        GridTHTDElement cell = beanGrid.getCell(0, 1);
+        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", beanGrid);
+        TestBenchElement textField = cell.$("vaadin-text-field").first();
+
+        Assert.assertEquals("Person 1", textField.getProperty("value"));
     }
 
     @Test

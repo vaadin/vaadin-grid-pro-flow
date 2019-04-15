@@ -51,7 +51,7 @@ import elemental.json.JsonObject;
 @Tag("vaadin-grid-pro")
 @HtmlImport("frontend://bower_components/vaadin-grid-pro/src/vaadin-grid-pro.html")
 @HtmlImport("frontend://bower_components/vaadin-grid-pro/src/vaadin-grid-pro-edit-column.html")
-@JavaScript("frontend://editColumnConnector.js")
+@JavaScript("frontend://gridProConnector.js")
 /**
  * Server-side component for the {@code <vaadin-grid-pro>} element.
  *
@@ -411,7 +411,7 @@ public class GridPro<E> extends Grid<E> {
      * @param <E> the bean type
      */
     @DomEvent("cell-edit-started")
-    static class CellEditStartedEvent<E> extends ComponentEvent<GridPro<E>> {
+    public static class CellEditStartedEvent<E> extends ComponentEvent<GridPro<E>> {
 
         private E item;
         private String path;
@@ -460,13 +460,13 @@ public class GridPro<E> extends Grid<E> {
      * @param listener a listener to be notified
      * @return a handle that can be used to unregister the listener
      */
-    Registration addCellEditStartedListener(ComponentEventListener<CellEditStartedEvent<E>> listener) {
+    public Registration addCellEditStartedListener(ComponentEventListener<CellEditStartedEvent<E>> listener) {
         return ComponentUtil.addListener(this, CellEditStartedEvent.class,
                 (ComponentEventListener) listener);
     }
 
     /**
-     * Event fired when the user starts to edit an existing item.
+     * Event fired when the user has edited an existing item.
      *
      * @param <E> the bean type
      */
@@ -525,7 +525,7 @@ public class GridPro<E> extends Grid<E> {
     }
 
     /**
-     * Registers a listener to be notified when the user starts to edit an existing item.
+     * Registers a listener to be notified when the user has edited an existing item.
      *
      * @param listener a listener to be notified
      * @return a handle that can be used to unregister the listener

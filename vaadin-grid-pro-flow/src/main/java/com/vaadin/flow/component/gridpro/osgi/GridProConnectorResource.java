@@ -42,7 +42,7 @@ import java.io.Serializable;
 
 /**
  *
- * Edit column connector resource registration.
+ * Grid pro connector resource registration.
  *
  * @author Vaadin Ltd
  *
@@ -52,10 +52,10 @@ public class GridProConnectorResource
         implements OsgiVaadinStaticResource, Serializable {
     @Override
     public String getPath() {
-        return "/META-INF/resources/frontend/editColumnConnector.js";
+        return "/META-INF/resources/frontend/gridProConnector.js";
     }
     @Override
     public String getAlias() {
-        return "/frontend/editColumnConnector.js";
+        return "/frontend/gridProConnector.js";
     }
 }

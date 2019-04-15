@@ -108,7 +108,7 @@ public class EditColumnConfigurator<T> implements Serializable {
 
     private <V> void setEditModeRenderer(AbstractField<?, V> component) {
         UI.getCurrent().getPage().executeJavaScript(
-                "window.Vaadin.Flow.editColumnConnector.setEditModeRenderer($0, $1)",
+                "window.Vaadin.Flow.gridProConnector.setEditModeRenderer($0, $1)",
                 column.getElement(), component.getElement());
     }
 

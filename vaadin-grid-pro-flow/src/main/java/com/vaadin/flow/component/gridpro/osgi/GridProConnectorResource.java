@@ -42,7 +42,7 @@ import java.io.Serializable;
 
 /**
  *
- * Combo box connector resource registration.
+ * Edit column connector resource registration.
  *
  * @author Vaadin Ltd
  *

@@ -411,7 +411,7 @@ public class GridPro<E> extends Grid<E> {
      * @param <E> the bean type
      */
     @DomEvent("cell-edit-started")
-    public static class CellEditStartedEvent<E> extends ComponentEvent<GridPro<E>> {
+    static class CellEditStartedEvent<E> extends ComponentEvent<GridPro<E>> {
 
         private E item;
         private String path;

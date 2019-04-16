@@ -1,25 +1,54 @@
 package com.vaadin.flow.component.gridpro;
 
+import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.data.provider.DataCommunicator;
+import com.vaadin.flow.data.provider.KeyMapper;
+import com.vaadin.flow.data.provider.DataProvider;
+import elemental.json.JsonObject;
+import elemental.json.impl.JreJsonFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.vaadin.flow.component.grid.Grid;
+import org.mockito.Mockito;
+
+import java.util.Arrays;
 
 public class GridProTest {
 
-    GridPro<String> grid;
-    Grid.Column<String> textColumn;
+    GridPro<Person> grid;
+    JsonObject selectedItem;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void init() {
-        grid = new GridPro<>();
-        textColumn = grid.addEditColumn(str -> str).text((item, newValue) -> {});
+        grid = createFakeGridPro();
+
+        // We should ensure the correct value were passed
+        grid.addEditColumn(Person::getName).text((item, newValue) -> Assert.assertEquals("foo", newValue));
+
+        // A client-side Grid item.
+        selectedItem = new JreJsonFactory()
+                .parse("{\"key\": \"1\", \"col0\":\"foo\"}");
+    }
+
+    private GridPro<Person> createFakeGridPro() {
+        GridPro<Person> grid = Mockito.spy(new GridPro<>());
+
+        Mockito.when(grid.getDataProvider()).thenReturn(Mockito.mock(DataProvider.class));
+
+        DataCommunicator<Person> communicator = Mockito.mock(DataCommunicator.class);
+        Mockito.when(grid.getDataCommunicator()).thenReturn(communicator);
+
+        KeyMapper<Person> keyMapper = Mockito.mock(KeyMapper.class);
+        Mockito.when(communicator.getKeyMapper()).thenReturn(keyMapper);
+
+        Mockito.when(keyMapper.get("1")).thenReturn(new Person("Foo", 1996));
+        return grid;
     }
 
     @Test
@@ -32,5 +61,26 @@ public class GridProTest {
     public void setKeepEditorOpen_getKeepEditorOpen() {
         grid.setKeepEditorOpen(true);
         Assert.assertEquals(grid.getKeepEditorOpen(), true);
+    }
+
+    @Test
+    public void itemAvailableInAllEvents() {
+        // Assert that all events come with an item.
+        grid.addCellEditStartedListener(e -> Assert.assertNotNull(e.getItem()));
+        grid.addItemPropertyChangedListener(e -> Assert.assertNotNull(e.getItem()));
+
+        // Simulate a sequence of interactions.
+        Arrays.asList(
+                new GridPro.CellEditStartedEvent<>(grid, false, selectedItem, "col0"),
+                new GridPro.ItemPropertyChangedEvent<>(grid, false, selectedItem, "col0")
+        ).forEach(e -> ComponentUtil.fireEvent(grid, e));
+    }
+
+    @Test
+    public void pathAvailableInItemPropertyChangedEvent() {
+        // Assert that all events come with an item.
+        grid.addItemPropertyChangedListener(e -> Assert.assertEquals("col0", e.getPath()));
+
+        ComponentUtil.fireEvent(grid, new GridPro.ItemPropertyChangedEvent<>(grid, false, selectedItem, "col0"));
     }
 }

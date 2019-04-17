@@ -363,28 +363,28 @@ public class GridPro<E> extends Grid<E> {
     }
 
     /**
-     * Sets the value of the webcomponent's property keepEditorOpen. Default values is false.
+     * Sets the value of the webcomponent's property singleCellEdit. Default values is false.
      * When true, after moving to next or previous editable cell using Tab / Shift+Tab,
-     * it will be focused in edit mode.
+     * it will be focused without edit mode.
      *
-     * @param keepEditorOpen
+     * @param SingleCellEdit
      *            when <code>true</code>, after moving to next or previous editable cell
      *            using Tab / Shift+Tab, it will be focused in edit mode
      */
-    public void setKeepEditorOpen(boolean keepEditorOpen) {
-        getElement().setProperty("keepEditorOpen", keepEditorOpen);
+    public void setSingleCellEdit(boolean SingleCellEdit) {
+        getElement().setProperty("singleCellEdit", SingleCellEdit);
     }
 
     /**
-     * Gets the value of the webcomponent's property keepEditorOpen. Default values is false.
+     * Gets the value of the webcomponent's property singleCellEdit. Default values is false.
      * When true, after moving to next or previous editable cell using Tab / Shift+Tab,
-     * it will be focused in edit mode.
+     * it will be focused without edit mode.
      *
-     * @return keepEditorOpen value
+     * @return singleCellEdit value
      */
-    @Synchronize("keep-editor-open-changed")
-    public boolean getKeepEditorOpen() {
-        return getElement().getProperty("keepEditorOpen", false);
+    @Synchronize("single-cell-edit-changed")
+    public boolean getSingleCellEdit() {
+        return getElement().getProperty("singleCellEdit", false);
     }
 
     /**

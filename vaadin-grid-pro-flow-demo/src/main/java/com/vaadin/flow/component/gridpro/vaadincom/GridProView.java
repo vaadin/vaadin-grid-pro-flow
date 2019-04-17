@@ -24,7 +24,7 @@ public class GridProView extends DemoView {
         customRepresentation();
         customEditorType();
         enterNextRow();
-        keepEditorOpen();
+        singleCellEdit();
     }
 
     private void basicGridPro() {
@@ -150,30 +150,48 @@ public class GridProView extends DemoView {
          * It is possible to allow enter pressing change the row by using grid pro method setEnterNextRow.
          */
         grid.setEnterNextRow(true);
+
         grid.addEditColumn(Person::getName)
                 .text((item, newValue) -> {})
                 .setHeader("Name (editable)");
-        // end-source-example
 
-        addCard("Enter Next Row", grid);
-    }
+        grid.addEditColumn(Person::isSubscriber)
+                .checkbox((item, newValue) -> {})
+                .setHeader("Subscriber (editable)");
 
-    private void keepEditorOpen() {
-        // begin-source-example
-        // source-example-heading: Keep Editor Open
-        GridPro<Person> grid = new GridPro<>();
-        grid.setItems(createItems());
-
-        /*
-         * It is possible to preserve edit mode when moving to the next cell by using grid pro method setKeepEditorOpen.
-         */
-        grid.setKeepEditorOpen(true);
         grid.addEditColumn(Person::getEmail)
                 .text((item, newValue) -> {})
                 .setHeader("Email (editable)");
         // end-source-example
 
-        addCard("Keep Editor Open", grid);
+        addCard("Enter Next Row", grid);
+    }
+
+    private void singleCellEdit() {
+        // begin-source-example
+        // source-example-heading: Single Cell Edit
+        GridPro<Person> grid = new GridPro<>();
+        grid.setItems(createItems());
+
+        /*
+         * It is possible to discard edit mode when moving to the next cell by using grid pro method setSingleCellEdit.
+         */
+        grid.setSingleCellEdit(true);
+
+        grid.addEditColumn(Person::getName)
+                .text((item, newValue) -> {})
+                .setHeader("Name (editable)");
+
+        grid.addEditColumn(Person::isSubscriber)
+                .checkbox((item, newValue) -> {})
+                .setHeader("Subscriber (editable)");
+
+        grid.addEditColumn(Person::getEmail)
+                .text((item, newValue) -> {})
+                .setHeader("Email (editable)");
+        // end-source-example
+
+        addCard("Single Cell Edit", grid);
     }
 
     private static List<Person> createItems() {

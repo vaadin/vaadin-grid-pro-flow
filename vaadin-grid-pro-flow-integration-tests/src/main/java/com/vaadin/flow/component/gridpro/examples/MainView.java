@@ -28,8 +28,13 @@ public class MainView extends VerticalLayout {
         Div itemDisplayPanel = new Div();
         Div subPropertyDisplayPanel = new Div();
 
+        Div eventsPanel = new Div();
+        eventsPanel.setId("events-panel");
+
         GridPro<Person> grid = new GridPro<>();
         grid.setItems(createItems());
+
+        grid.addCellEditStartedListener(e -> eventsPanel.add(e.getItem().toString()));
 
         grid.addColumn(Person::getAge).setHeader("Age");
 
@@ -56,7 +61,7 @@ public class MainView extends VerticalLayout {
             subPropertyDisplayPanel.setText(newValue.toString());
         }).setHeader("Subscriber").setWidth("300px");
 
-        add(grid, itemDisplayPanel, subPropertyDisplayPanel);
+        add(grid, itemDisplayPanel, subPropertyDisplayPanel, eventsPanel);
     }
 
     protected void createBeanGridWithEditColumns() {

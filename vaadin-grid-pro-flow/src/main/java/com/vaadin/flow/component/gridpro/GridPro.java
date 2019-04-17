@@ -510,7 +510,7 @@ public class GridPro<E> extends Grid<E> {
          *
          * @return the instance of edited item
          */
-        public JsonObject getSourceItem() {
+        private JsonObject getSourceItem() {
             return sourceItem;
         }
 
@@ -519,7 +519,7 @@ public class GridPro<E> extends Grid<E> {
          *
          * @return the key of the column
          */
-        public String getPath() {
+        private String getPath() {
             return path;
         }
     }

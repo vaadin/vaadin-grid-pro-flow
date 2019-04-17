@@ -14,12 +14,15 @@ import org.junit.rules.ExpectedException;
 
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GridProTest {
 
     GridPro<Person> grid;
     JsonObject selectedItem;
+    ArrayList<Person> items = new ArrayList<>();
+    Person testItem = new Person("Foo", 1996);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -47,7 +50,7 @@ public class GridProTest {
         KeyMapper<Person> keyMapper = Mockito.mock(KeyMapper.class);
         Mockito.when(communicator.getKeyMapper()).thenReturn(keyMapper);
 
-        Mockito.when(keyMapper.get("1")).thenReturn(new Person("Foo", 1996));
+        Mockito.when(keyMapper.get("1")).thenReturn(testItem);
         return grid;
     }
 
@@ -66,21 +69,16 @@ public class GridProTest {
     @Test
     public void itemAvailableInAllEvents() {
         // Assert that all events come with an item.
-        grid.addCellEditStartedListener(e -> Assert.assertNotNull(e.getItem()));
-        grid.addItemPropertyChangedListener(e -> Assert.assertNotNull(e.getItem()));
+        grid.addCellEditStartedListener(e -> items.add(e.getItem()));
+        grid.addItemPropertyChangedListener(e -> items.add(e.getItem()));
 
         // Simulate a sequence of interactions.
         Arrays.asList(
                 new GridPro.CellEditStartedEvent<>(grid, false, selectedItem, "col0"),
                 new GridPro.ItemPropertyChangedEvent<>(grid, false, selectedItem, "col0")
         ).forEach(e -> ComponentUtil.fireEvent(grid, e));
-    }
 
-    @Test
-    public void pathAvailableInItemPropertyChangedEvent() {
-        // Assert that all events come with an item.
-        grid.addItemPropertyChangedListener(e -> Assert.assertEquals("col0", e.getPath()));
-
-        ComponentUtil.fireEvent(grid, new GridPro.ItemPropertyChangedEvent<>(grid, false, selectedItem, "col0"));
+        Assert.assertEquals(2, items.size());
+        items.forEach(item -> Assert.assertEquals(testItem, item));
     }
 }

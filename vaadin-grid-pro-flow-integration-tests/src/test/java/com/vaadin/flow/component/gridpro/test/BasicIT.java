@@ -95,6 +95,12 @@ public class BasicIT extends AbstractParallelTest {
     }
 
     @Test
+    public void cellEditStartedListenerCalledOnce() {
+        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-combo-box");
+        Assert.assertEquals("Person{id=1, age=23, name='Person 1', isSubscriber=false, email='person1@vaadin.com', department=sales}", getPanelText("events-panel"));
+    }
+
+    @Test
     public void customComboBoxIsUsedForEditColumn() {
         AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-combo-box");
     }
@@ -156,5 +162,9 @@ public class BasicIT extends AbstractParallelTest {
         executeScript("var cellContent = arguments[0].firstElementChild.assignedNodes()[0];" +
             "cellContent.dispatchEvent(new CustomEvent('dblclick', {composed: true, bubbles: true}));", cell);
         Assert.assertTrue(cell.innerHTMLContains(editorTag));
+    }
+
+    private String getPanelText(String id) {
+        return $("div").onPage().id(id).getText();
     }
 }

@@ -155,13 +155,13 @@ public class GridProView extends DemoView {
                 .text((item, newValue) -> {})
                 .setHeader("Name (editable)");
 
-        grid.addEditColumn(Person::isSubscriber)
-                .checkbox((item, newValue) -> {})
-                .setHeader("Subscriber (editable)");
-
         grid.addEditColumn(Person::getEmail)
                 .text((item, newValue) -> {})
                 .setHeader("Email (editable)");
+
+        grid.addEditColumn(Person::isSubscriber)
+                .checkbox((item, newValue) -> {})
+                .setHeader("Subscriber (editable)");
         // end-source-example
 
         addCard("Enter Next Row", grid);
@@ -182,13 +182,13 @@ public class GridProView extends DemoView {
                 .text((item, newValue) -> {})
                 .setHeader("Name (editable)");
 
-        grid.addEditColumn(Person::isSubscriber)
-                .checkbox((item, newValue) -> {})
-                .setHeader("Subscriber (editable)");
-
         grid.addEditColumn(Person::getEmail)
                 .text((item, newValue) -> {})
                 .setHeader("Email (editable)");
+
+        grid.addEditColumn(Person::isSubscriber)
+                .checkbox((item, newValue) -> {})
+                .setHeader("Subscriber (editable)");
         // end-source-example
 
         addCard("Single Cell Edit", grid);

@@ -130,9 +130,6 @@ public class GridProView extends DemoView {
 
         grid.addColumn(Person::getName).setHeader("NAME");
 
-        /*
-         * Using ComponentRenderer to create a custom representation of the boolean value.
-         */
         Input customInput = new Input();
         grid.addEditColumn(Person::getEmail)
                 .custom(customInput, (item, newValue) -> {})

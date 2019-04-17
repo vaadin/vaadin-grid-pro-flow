@@ -98,7 +98,12 @@ public class MainView extends VerticalLayout {
         person.setEmail("person" + index + "@vaadin.com");
         person.setName("Person " + index);
         person.setAge(13 + random.nextInt(50));
-        person.setDepartment(Department.getRandomDepartment());
+
+        if (index == 1) {
+            person.setDepartment(Department.SALES);
+        } else {
+            person.setDepartment(Department.getRandomDepartment());
+        }
 
         return person;
     }

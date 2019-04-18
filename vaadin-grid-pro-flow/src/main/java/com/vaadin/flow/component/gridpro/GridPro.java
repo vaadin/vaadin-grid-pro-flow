@@ -366,12 +366,12 @@ public class GridPro<E> extends Grid<E> {
      * When true, after moving to next or previous editable cell using Tab / Shift+Tab,
      * it will be focused without edit mode.
      *
-     * @param SingleCellEdit
+     * @param singleCellEdit
      *            when <code>true</code>, after moving to next or previous editable cell
-     *            using Tab / Shift+Tab, it will be focused in edit mode
+     *            using Tab / Shift+Tab, it will be focused without edit mode
      */
-    public void setSingleCellEdit(boolean SingleCellEdit) {
-        getElement().setProperty("singleCellEdit", SingleCellEdit);
+    public void setSingleCellEdit(boolean singleCellEdit) {
+        getElement().setProperty("singleCellEdit", singleCellEdit);
     }
 
     /**

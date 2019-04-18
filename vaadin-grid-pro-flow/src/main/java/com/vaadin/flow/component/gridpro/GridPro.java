@@ -111,7 +111,6 @@ public class GridPro<E> extends Grid<E> {
                 column.getItemUpdater().accept(e.getItem(), e.getSourceItem().get(e.getPath()).asString());
             }
 
-
             getDataProvider().refreshItem(e.getItem());
         });
 

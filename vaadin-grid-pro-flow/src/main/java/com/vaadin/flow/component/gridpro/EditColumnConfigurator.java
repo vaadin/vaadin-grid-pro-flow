@@ -62,9 +62,11 @@ public class EditColumnConfigurator<T> implements Serializable {
         column.setItemUpdater(itemUpdater);
         column.setOptions(options);
 
-        UI.getCurrent().getPage().executeJavaScript(
-                "window.Vaadin.Flow.gridProConnector.patchEditModeRenderer($0)",
-                column.getElement());
+        column.getElement().getNode()
+                .runWhenAttached(ui -> ui.beforeClientResponse(column,
+                        context -> UI.getCurrent().getPage().executeJavaScript(
+                                "window.Vaadin.Flow.gridProConnector.patchEditModeRenderer($0)",
+                                column.getElement())));
 
         return getColumn();
     }

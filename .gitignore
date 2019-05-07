@@ -11,3 +11,7 @@ vaadin-grid-pro-flow-integration-tests/error-screenshots/
 *.launch
 .settings/
 .vscode/*
+
+node_modules
+package*json
+webpack.config.js

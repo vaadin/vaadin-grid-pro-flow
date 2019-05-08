@@ -9,10 +9,10 @@
         <version>2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>vaadin-grid-pro-integration-tests</artifactId>
+    <artifactId>vaadin-grid-pro-integration-tests-bower-mode</artifactId>
     <packaging>war</packaging>
 
-    <name>Vaadin GridPro Integration Tests</name>
+    <name>Vaadin GridPro Integration Tests in Bower Mode</name>
 
     <properties>
         <sauce.options>--tunnel-identifier ${maven.build.timestamp}</sauce.options>
@@ -75,10 +75,6 @@
             <groupId>com.vaadin</groupId>
             <artifactId>flow-html-components</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>flow-server-production-mode</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -99,29 +95,27 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>com.vaadin</groupId>
-                <artifactId>flow-maven-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <configuration combine.self="override">
-                    <skip>${skipITs}</skip>
-                    <scanIntervalSeconds>2</scanIntervalSeconds>
-                    <stopKey>STOP</stopKey>
-                    <stopPort>8005</stopPort>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
                 <version>1.0.0</version>
                 <executions>
+                    <execution>
+                        <goals>
+                            <goal>set-system-properties</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <property>
+                                    <name>vaadin.bowerMode</name>
+                                    <value>true</value>
+                                </property>
+                                <property>
+                                    <name>vaadin.productionMode</name>
+                                    <value>false</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </execution>                    
                     <execution>
                         <id>read-local-properties-if-present</id>
                         <phase>initialize</phase>
@@ -136,6 +130,17 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration combine.self="override">
+                    <skip>${skipITs}</skip>
+                    <scanIntervalSeconds>2</scanIntervalSeconds>
+                    <stopKey>STOP</stopKey>
+                    <stopPort>8005</stopPort>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -166,6 +171,7 @@
                                 <sauce.user>${sauce.user}</sauce.user>
                                 <sauce.sauceAccessKey>${sauce.sauceAccessKey}</sauce.sauceAccessKey>
                                 <sauce.options>${sauce.options}</sauce.options>
+                                <vaadin.bowerMode>true</vaadin.bowerMode>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>
@@ -226,6 +232,7 @@
                                 <webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
                                 <webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
                                 <com.vaadin.testbench.Parameters.runLocally>${runLocally}</com.vaadin.testbench.Parameters.runLocally>
+                                <vaadin.bowerMode>true</vaadin.bowerMode>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>
@@ -250,7 +257,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>

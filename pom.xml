@@ -26,6 +26,7 @@
         <module>vaadin-grid-pro-flow-testbench</module>
         <module>vaadin-grid-pro-flow-demo</module>
         <module>vaadin-grid-pro-flow-integration-tests</module>
+        <module>vaadin-grid-pro-flow-integration-tests/pom-bower-mode.xml</module>
     </modules>
 
     <repositories>

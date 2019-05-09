@@ -25,8 +25,6 @@
         <module>vaadin-grid-pro-flow</module>
         <module>vaadin-grid-pro-flow-testbench</module>
         <module>vaadin-grid-pro-flow-demo</module>
-        <module>vaadin-grid-pro-flow-integration-tests</module>
-        <module>vaadin-grid-pro-flow-integration-tests/pom-bower-mode.xml</module>
     </modules>
 
     <repositories>
@@ -43,4 +41,24 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <profiles>
+        <profile>
+            <id>npm-it</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>vaadin-grid-pro-flow-integration-tests</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>bower-it</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>vaadin-grid-pro-flow-integration-tests/pom-bower-mode.xml</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

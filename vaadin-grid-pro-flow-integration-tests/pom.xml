@@ -107,6 +107,17 @@
             </plugin>
 
             <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration combine.self="override">
+                    <skip>${skipITs}</skip>
+                    <scanIntervalSeconds>2</scanIntervalSeconds>
+                    <stopKey>STOP</stopKey>
+                    <stopPort>8005</stopPort>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
                 <version>1.0.0</version>

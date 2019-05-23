@@ -54,7 +54,7 @@ import elemental.json.JsonObject;
 @NpmPackage(value = "@vaadin/vaadin-grid-pro", version = "2.0.0")
 @JsModule("@vaadin/vaadin-grid-pro/src/vaadin-grid-pro.js")
 @JsModule("@vaadin/vaadin-grid-pro/src/vaadin-grid-pro-edit-column.js")
-@JsModule("@vaadin/flow-frontend/gridProConnector.js")
+@JsModule("./gridProConnector.js")
 
 @HtmlImport("frontend://bower_components/vaadin-grid-pro/src/vaadin-grid-pro.html")
 @HtmlImport("frontend://bower_components/vaadin-grid-pro/src/vaadin-grid-pro-edit-column.html")

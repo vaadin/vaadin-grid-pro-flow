@@ -289,7 +289,13 @@ public class GridPro<E> extends Grid<E> {
         String columnId = createColumnId(false);
 
         EditColumn<E> column = this.addColumn((new ColumnComponentPathRenderer<>(columnId,
-                value -> valueProvider.apply(value), renderer)), this::createEditColumn);
+                value -> {
+                    if (valueProvider.apply(value) != null) {
+                        return valueProvider.apply(value).toString();
+                    } else {
+                        return "";
+                    }
+                }, renderer)), this::createEditColumn);
         idToColumnMap.put(columnId, column);
 
         return new EditColumnConfigurator<>(column, valueProvider);

@@ -27,12 +27,15 @@ public class MainView extends VerticalLayout {
     protected void createEditorColumns() {
         Div itemDisplayPanel = new Div();
         Div subPropertyDisplayPanel = new Div();
+        subPropertyDisplayPanel.setId("prop-panel");
 
         Div eventsPanel = new Div();
         eventsPanel.setId("events-panel");
 
         GridPro<Person> grid = new GridPro<>();
-        grid.setItems(createItems());
+        List<City> cityList = new ArrayList<>();
+        List<Person> personList = createItems(cityList);
+        grid.setItems(personList);
 
         grid.addCellEditStartedListener(e -> eventsPanel.add(e.getItem().toString()));
 
@@ -61,13 +64,36 @@ public class MainView extends VerticalLayout {
             subPropertyDisplayPanel.setText(newValue.toString());
         }).setHeader("Subscriber").setWidth("300px");
 
+        ComboBox<City> cityCb = new ComboBox<>();
+        cityCb.setItems(cityList);
+        cityCb.setItemLabelGenerator(City::getName);
+
+        ComponentRenderer<Span, Person> cityRenderer =
+            new ComponentRenderer<>(person -> {
+                if (person.getCity() != null) {
+                    return new Span(person.getCity().getName());
+                } else {
+                    return new Span("");
+                }
+            });
+
+        grid.addEditColumn(Person::getCity, cityRenderer).custom(cityCb,
+                (item, newValue) -> {
+                    item.setCity(newValue);
+                    newValue.setPerson(item);
+                    itemDisplayPanel.setText(item.toString());
+                    subPropertyDisplayPanel.setText(newValue.toString());
+        }).setHeader("City").setWidth("300px");
+
         add(grid, itemDisplayPanel, subPropertyDisplayPanel, eventsPanel);
     }
 
     protected void createBeanGridWithEditColumns() {
         GridPro<Person> beanGrid = new GridPro<>(Person.class);
         beanGrid.setColumns();
-        beanGrid.setItems(createItems());
+        List<City> cityList = new ArrayList<>();
+        List<Person> personList = createItems(cityList);
+        beanGrid.setItems(personList);
 
         beanGrid.addEditColumn("age").text((item, newValue) -> item.setAge(Integer.valueOf(newValue)));
 
@@ -85,19 +111,25 @@ public class MainView extends VerticalLayout {
         add(beanGrid);
     }
 
-    private static List<Person> createItems() {
+    private static List<Person> createItems(List<City> cityList) {
         Random random = new Random(0);
         return IntStream.range(1, 500)
-                .mapToObj(index -> createPerson(index, random))
+                .mapToObj(index -> createPerson(index, random, cityList))
                 .collect(Collectors.toList());
     }
 
-    private static Person createPerson(int index, Random random) {
+    private static Person createPerson(int index, Random random,
+                                       List<City> cityList) {
         Person person = new Person();
         person.setId(index);
         person.setEmail("person" + index + "@vaadin.com");
         person.setName("Person " + index);
         person.setAge(13 + random.nextInt(50));
+
+        City city = new City("City" + index, person);
+        city.setId(index);
+        person.setCity(city);
+        cityList.add(city);
 
         if (index == 1) {
             person.setDepartment(Department.SALES);

@@ -107,8 +107,8 @@ public class Person implements Serializable {
                 ", isSubscriber=" + isSubscriber +
                 ", email='" + email + '\'' +
                 ", department=" + department +
-                ", city=" + city.getName() +
-                '}';
+                ", city='" + city.getName() +
+                "'}";
     }
 
     @Override

@@ -33,8 +33,9 @@ public class MainView extends VerticalLayout {
         eventsPanel.setId("events-panel");
 
         GridPro<Person> grid = new GridPro<>();
-        List<City> cityList = new ArrayList<>();
-        List<Person> personList = createItems(cityList);
+        List<City> cityList = createCityItems();
+        List<Person> personList = createItems();
+        mapLists(personList, cityList);
         grid.setItems(personList);
 
         grid.addCellEditStartedListener(e -> eventsPanel.add(e.getItem().toString()));
@@ -91,9 +92,7 @@ public class MainView extends VerticalLayout {
     protected void createBeanGridWithEditColumns() {
         GridPro<Person> beanGrid = new GridPro<>(Person.class);
         beanGrid.setColumns();
-        List<City> cityList = new ArrayList<>();
-        List<Person> personList = createItems(cityList);
-        beanGrid.setItems(personList);
+        beanGrid.setItems(createItems());
 
         beanGrid.addEditColumn("age").text((item, newValue) -> item.setAge(Integer.valueOf(newValue)));
 
@@ -111,25 +110,19 @@ public class MainView extends VerticalLayout {
         add(beanGrid);
     }
 
-    private static List<Person> createItems(List<City> cityList) {
+    private static List<Person> createItems() {
         Random random = new Random(0);
         return IntStream.range(1, 500)
-                .mapToObj(index -> createPerson(index, random, cityList))
+                .mapToObj(index -> createPerson(index, random))
                 .collect(Collectors.toList());
     }
 
-    private static Person createPerson(int index, Random random,
-                                       List<City> cityList) {
+    private static Person createPerson(int index, Random random) {
         Person person = new Person();
         person.setId(index);
         person.setEmail("person" + index + "@vaadin.com");
         person.setName("Person " + index);
         person.setAge(13 + random.nextInt(50));
-
-        City city = new City("City" + index, person);
-        city.setId(index);
-        person.setCity(city);
-        cityList.add(city);
 
         if (index == 1) {
             person.setDepartment(Department.SALES);
@@ -138,6 +131,30 @@ public class MainView extends VerticalLayout {
         }
 
         return person;
+    }
+
+    private static List<City> createCityItems() {
+        return IntStream.range(1, 500)
+                .mapToObj(index -> createCity(index))
+                .collect(Collectors.toList());
+    }
+
+    private static City createCity(int index) {
+        City city = new City();
+        city.setId(index);
+        city.setName("City " + index);
+
+        return city;
+    }
+
+    private static void mapLists(List<Person> personList, List<City> cityList) {
+        IntStream.range(0, personList.size())
+            .forEach(index -> {
+                Person person = personList.get(index);
+                City city = cityList.get(index);
+                person.setCity(city);
+                city.setPerson(person);
+            });
     }
 
     public static Department fromStringRepresentation(String stringRepresentation)

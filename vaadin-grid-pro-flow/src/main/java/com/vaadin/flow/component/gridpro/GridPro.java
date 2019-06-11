@@ -290,8 +290,9 @@ public class GridPro<E> extends Grid<E> {
 
         EditColumn<E> column = this.addColumn((new ColumnComponentPathRenderer<>(columnId,
                 value -> {
-                    if (valueProvider.apply(value) != null) {
-                        return valueProvider.apply(value).toString();
+                    Object item = valueProvider.apply(value);
+                    if (item != null) {
+                        return item.toString();
                     } else {
                         return "";
                     }

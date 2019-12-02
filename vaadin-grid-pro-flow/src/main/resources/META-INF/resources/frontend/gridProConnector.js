@@ -1,56 +1,39 @@
-// Error handling functions
-const tryCatchWrapper = function(originalFunction) {
-    return function() {
-        try {
-            const result = originalFunction.apply(this, arguments);
-            return result;
-        } catch (error) {
-            logError(error.message);
-        }
-    }
-}
+(function () {
+    const tryCatchWrapper = function (callback) {
+        return window.Vaadin.Flow.tryCatchWrapper(callback, 'Vaadin Grid Pro', 'vaadin-grid-pro-flow');
+    };
 
-function logError(message) {
-    console.error("There seems to be an error in the GridPro:\n" + message + "\n" +
-       "Please submit an issue to https://github.com/vaadin/vaadin-grid-pro-flow/issues/new!");
-}
+    window.Vaadin.Flow.gridProConnector = {
+        setEditModeRenderer: tryCatchWrapper(function (column, component) {
+            column.editModeRenderer = tryCatchWrapper(function (root) {
+                root.appendChild(component);
+                this._grid._cancelStopEdit();
+                component.focus();
+            });
 
-window.Vaadin.Flow.gridProConnector = {
-  setEditModeRenderer: tryCatchWrapper(function(column, component) {
-      column.editModeRenderer = tryCatchWrapper(function(root) {
-          root.appendChild(component);
-          this._grid._cancelStopEdit();
-          component.focus();
-      });
+            // Not needed in case of custom editor as value is set on server-side.
+            // Overridden in order to avoid blinking of the cell content.
+            column._setEditorValue = function (editor, value) {};
+            column._getEditorValue = function (editor) {
+                return;
+            };
+        }),
 
-      column._setEditorValue = tryCatchWrapper(function(editor, value) {
-          // Not needed in case of custom editor as value is set on server-side.
-          // Overridden in order to avoid blinking of the cell content.
-      })
+        patchEditModeRenderer: tryCatchWrapper(function (column) {
+            column.__editModeRenderer = tryCatchWrapper(function (root, column, rowData) {
+                const cell = root.assignedSlot.parentNode;
+                const grid = column._grid;
 
-      column._getEditorValue = tryCatchWrapper(function(editor) {
-          // Not needed in case of custom editor as value is set on server-side.
-          // Overridden in order to avoid blinking of the cell content.
-          return;
-      })
-  }),
+                if (grid.__edited && grid.__edited.model.item.key !== rowData.item.key) {
+                    grid._stopEdit();
+                    return;
+                }
 
-  patchEditModeRenderer: tryCatchWrapper(function(column) {
-      column.__editModeRenderer = tryCatchWrapper(function(root, column, rowData) {
-          const cell = root.assignedSlot.parentNode;
-          const grid = column._grid;
-
-          if (grid.__edited && grid.__edited.model.item.key !== rowData.item.key) {
-              grid._stopEdit();
-              return;
-          }
-
-          const tagName = column._getEditorTagName(cell);
-          if (!root.firstElementChild || root.firstElementChild.localName.toLowerCase() !== tagName) {
-              root.innerHTML = `
-              <${tagName}></${tagName}>
-            `;
-          }
-      });
-  })
-};
+                const tagName = column._getEditorTagName(cell);
+                if (!root.firstElementChild || root.firstElementChild.localName.toLowerCase() !== tagName) {
+                    root.innerHTML = `<${tagName}></${tagName}>`;
+                }
+            });
+        })
+    };
+})();

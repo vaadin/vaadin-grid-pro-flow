@@ -177,7 +177,7 @@ public class BasicIT extends AbstractParallelTest {
 
     @Test
     public void disabledGridShouldNotBeActivatedByDoubleClick() {
-        $("vaadin-button").id("enable-grid-id").click();
+        $("vaadin-button").id("disable-grid-id").click();
         GridTHTDElement cell = grid.getCell(0, 1);
         cell.doubleClick();
         Assert.assertFalse(grid.$("vaadin-text-field").exists());

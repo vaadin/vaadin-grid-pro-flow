@@ -34,8 +34,8 @@ public class MainView extends VerticalLayout {
         eventsPanel.setId("events-panel");
 
         GridPro<Person> grid = new GridPro<>();
-        Button enableGrid = new Button("Disable Grid");
-        enableGrid.setId("enable-grid-id");
+        Button disableGrid = new Button("Disable Grid");
+        disableGrid.setId("disable-grid-id");
 
         List<City> cityList = createCityItems();
         List<Person> personList = createItems();
@@ -90,9 +90,9 @@ public class MainView extends VerticalLayout {
                     subPropertyDisplayPanel.setText(newValue.toString());
         }).setHeader("City").setWidth("300px");
 
-        enableGrid.addClickListener(click -> grid.setEnabled(false));
+        disableGrid.addClickListener(click -> grid.setEnabled(false));
 
-        add(grid, itemDisplayPanel, subPropertyDisplayPanel, eventsPanel);
+        add(grid, itemDisplayPanel, subPropertyDisplayPanel, eventsPanel, disableGrid);
     }
 
     protected void createBeanGridWithEditColumns() {

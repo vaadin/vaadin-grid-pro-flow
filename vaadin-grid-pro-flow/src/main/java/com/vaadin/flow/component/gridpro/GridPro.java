@@ -111,7 +111,7 @@ public class GridPro<E> extends Grid<E> {
     @Override
     public void onEnabledStateChanged(boolean enabled) {
         super.onEnabledStateChanged(enabled);
-        getElement().executeJs("this._editingDisabled = $0;", !enabled);
+        getElement().setProperty("_editingDisabled", !enabled);
     }
 
     private void setup() {

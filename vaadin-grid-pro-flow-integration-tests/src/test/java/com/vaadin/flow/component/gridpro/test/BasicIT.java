@@ -175,6 +175,14 @@ public class BasicIT extends AbstractParallelTest {
         Assert.assertTrue(optionsList.contains("Sales"));
     }
 
+    @Test
+    public void disabledGridShouldNotBeActivatedByDoubleClick() {
+        $("vaadin-button").id("enable-grid-id").click();
+        GridTHTDElement cell = grid.getCell(0, 1);
+        cell.doubleClick();
+        Assert.assertFalse(grid.$("vaadin-text-field").exists());
+    }
+
     private void AssertCellEnterEditModeOnDoubleClick(Integer rowIndex, Integer colIndex, String editorTag) {
         AssertCellEnterEditModeOnDoubleClick(rowIndex, colIndex, editorTag, grid);
     }

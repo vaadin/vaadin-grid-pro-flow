@@ -31,7 +31,7 @@ public class BasicIT extends AbstractParallelTest {
     public void columnIsRenderedInBeanGrid() {
         GridTHTDElement cell = beanGrid.getCell(0, 0);
         Assert.assertEquals("23", cell.getInnerHTML());
-        AssertCellEnterEditModeOnDoubleClick(0, 0, "vaadin-grid-pro-edit-text-field", beanGrid);
+        AssertCellEnterEditModeOnDoubleClick(0, 0, "vaadin-grid-pro-edit-text-field", beanGrid, true);
     }
 
     @Test
@@ -149,13 +149,13 @@ public class BasicIT extends AbstractParallelTest {
 
     @Test
     public void customTextFieldIsUsedForEditColumn() {
-        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", beanGrid);
+        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", beanGrid, true);
     }
 
     @Test
     public void customTextFieldIsGettingValue() {
         GridTHTDElement cell = beanGrid.getCell(0, 1);
-        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", beanGrid);
+        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", beanGrid, true);
         TestBenchElement textField = cell.$("vaadin-text-field").first();
 
         Assert.assertEquals("Person 1", textField.getProperty("value"));
@@ -163,7 +163,7 @@ public class BasicIT extends AbstractParallelTest {
 
     @Test
     public void selectEditorIsUsedForSelectColumn() {
-        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-grid-pro-edit-select", beanGrid);
+        AssertCellEnterEditModeOnDoubleClick(0, 2, "vaadin-grid-pro-edit-select", beanGrid, true);
     }
 
     @Test
@@ -178,16 +178,14 @@ public class BasicIT extends AbstractParallelTest {
     @Test
     public void disabledGridShouldNotBeActivatedByDoubleClick() {
         $("vaadin-button").id("disable-grid-id").click();
-        GridTHTDElement cell = grid.getCell(0, 1);
-        cell.doubleClick();
-        Assert.assertFalse(grid.$("vaadin-text-field").exists());
+        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", beanGrid, false);
     }
 
     private void AssertCellEnterEditModeOnDoubleClick(Integer rowIndex, Integer colIndex, String editorTag) {
-        AssertCellEnterEditModeOnDoubleClick(rowIndex, colIndex, editorTag, grid);
+        AssertCellEnterEditModeOnDoubleClick(rowIndex, colIndex, editorTag, grid, true);
     }
 
-    private void AssertCellEnterEditModeOnDoubleClick(Integer rowIndex, Integer colIndex, String editorTag, GridProElement grid) {
+    private void AssertCellEnterEditModeOnDoubleClick(Integer rowIndex, Integer colIndex, String editorTag, GridProElement grid, boolean editingEnabled) {
         GridTHTDElement cell = grid.getCell(rowIndex, colIndex);
 
         // Not in edit mode initially
@@ -197,7 +195,7 @@ public class BasicIT extends AbstractParallelTest {
         // Workaround(yuriy-fix): doubleClick is not working on IE11
         executeScript("var cellContent = arguments[0].firstElementChild.assignedNodes()[0];" +
             "cellContent.dispatchEvent(new CustomEvent('dblclick', {composed: true, bubbles: true}));", cell);
-        Assert.assertTrue(cell.innerHTMLContains(editorTag));
+        Assert.assertEquals(editingEnabled, cell.innerHTMLContains(editorTag));
     }
 
     private String getPanelText(String id) {

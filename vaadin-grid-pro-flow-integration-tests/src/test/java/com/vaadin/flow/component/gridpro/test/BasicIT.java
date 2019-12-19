@@ -178,7 +178,7 @@ public class BasicIT extends AbstractParallelTest {
     @Test
     public void disabledGridShouldNotBeActivatedByDoubleClick() {
         $("vaadin-button").id("disable-grid-id").click();
-        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-text-field", grid, false);
+        AssertCellEnterEditModeOnDoubleClick(0, 1, "vaadin-grid-pro-edit-text-field", grid, false);
     }
 
     private void AssertCellEnterEditModeOnDoubleClick(Integer rowIndex, Integer colIndex, String editorTag) {

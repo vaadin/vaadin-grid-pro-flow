@@ -12,6 +12,9 @@ vaadin-grid-pro-flow-integration-tests/error-screenshots/
 .settings/
 .vscode/*
 
-node_modules
-package*json
-webpack.config.js
+package*.json
+pnpm-lock.yaml
+webpack.*.js
+tsconfig.json
+types.d.ts
+node_modules/

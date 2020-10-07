@@ -1,3 +1,7 @@
+ ⚠️ **This repository is deprecated**
+- Sources for this flow component can be found at https://github.com/vaadin/vaadin-flow-component
+- Tickets has been moved to the web component repository https://github.com/vaadin/vaadin-grid-pro/issues
+  
 # Vaadin GridPro for Flow
 
 Vaadin GridPro for Flow is a high quality data grid / data table UI component add-on for Vaadin.
